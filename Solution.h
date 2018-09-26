@@ -351,6 +351,7 @@ public:
         return storage[0][len - 1];
     }
 
+    // problem 861
     int matrixScore(vector<vector<int>>& A) {
         vector<vector<int>> B = A;
 
@@ -387,6 +388,68 @@ public:
         }
         return sum;
 
+    }
+
+    // problem 797
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+        int n = graph.size();
+        vector<vector<int>> routes;
+
+        vector<int> cur_route;
+        int cur_node = 0;
+        visitGraph(graph, routes, cur_route, cur_node);
+        return routes;
+    }
+
+    // problem 797
+    void visitGraph(vector<vector<int>>& graph, vector<vector<int>>& routes, vector<int> cur_route, int cur_node){
+        cur_route.push_back(cur_node);
+        if(cur_node == graph.size()-1) {
+            routes.push_back(cur_route);
+        }
+        for(int i: graph[cur_node])
+            visitGraph(graph, routes, cur_route, i);
+    }
+
+    // problem 190
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t result = 0;
+        for(int i=0;i<32;++i){
+            result |= ((n>>i)&1) << (31-i);
+        }
+        return result;
+    }
+
+    // problem 740
+    int deleteAndEarn(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> max_sum(n+1, 0);
+        max_sum[1] = nums[0];
+        sort(nums.begin(), nums.end());
+
+        // if pick num[i], then every value equals to nums[i]-1 and nums[i]+1 needs to be deleted
+        for(int i=2;i<=n;++i) {
+            int j = i-1;
+            for(;j>0;--j) {
+                if (nums[j-1] == nums[i-1]- 1) {
+                    int k = j - 1;
+                    for (;k > 0; --k) {
+                        if (nums[j - 1] != nums[k - 1]) {
+                            break;
+                        }
+                    }
+                    max_sum[i] = max(max_sum[j], max_sum[k] + (i - j) * nums[i]);
+                    break;
+                }else if(nums[j-1] != nums[i-1]){
+                    max_sum[i] = max_sum[j]+(i-j)*nums[i];
+                    break;
+                }
+            }
+            if(j==0){
+                max_sum[i] = max_sum[j]+(i-j)*nums[i-1];
+            }
+        }
+        return max_sum[n];
     }
 };
 
