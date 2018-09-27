@@ -471,7 +471,7 @@ public:
         if (l2 == nullptr)
             return l1;
         ListNode result_obj = ListNode(0);
-        ListNode* result = & result_obj;
+        ListNode *result = &result_obj;
         ListNode *p_node = result;
         while (l1 && l2) {
             if (l1->val > l2->val) {
@@ -494,6 +494,49 @@ public:
             p_node = p_node->next;
         }
         return result->next;
+    }
+
+    // problem 714
+    int maxProfit(vector<int> &prices, int fee) {
+        int buy = INT32_MIN, sell = 0;
+        for (int price:prices) {
+            int sell_old = sell;
+            sell = max(sell, buy + price);
+            buy = max(buy, sell_old - price - fee);
+        }
+        return sell;
+    }
+
+    // problem 80
+    int removeDuplicates(vector<int> &nums) {
+        if (nums.size() <= 2)
+            return nums.size();
+        int count = 1, last_value = nums[0];
+        for (auto item = nums.begin() + 1; item != nums.end();) {
+            if (*item == last_value) {
+                if (count == 0) {
+                    item = nums.erase(item);
+                    continue;
+                } else {
+                    count--;
+                }
+            }else{
+                last_value = *item;
+                count = 1;
+            }
+            item++;
+        }
+        return nums.size();
+    }
+
+    // problem 172
+    int trailingZeroes(int n) {
+        int result = 0;
+
+        for(long long i=5;n/i>0;i*=5){
+            result += (n/i);
+        }
+        return result;
     }
 };
 
