@@ -422,11 +422,13 @@ public:
 
     // problem 740
     int deleteAndEarn(vector<int>& nums) {
+        if(nums.empty())
+            return 0;
         int n = nums.size();
-        vector<int> max_sum(n+1, 0);
-        max_sum[1] = nums[0];
         sort(nums.begin(), nums.end());
 
+        vector<int> max_sum(n+1, 0);
+        max_sum[1] = nums[0];
         // if pick num[i], then every value equals to nums[i]-1 and nums[i]+1 needs to be deleted
         for(int i=2;i<=n;++i) {
             int j = i-1;
@@ -438,10 +440,10 @@ public:
                             break;
                         }
                     }
-                    max_sum[i] = max(max_sum[j], max_sum[k] + (i - j) * nums[i]);
+                    max_sum[i] = max(max_sum[j], max_sum[k] + (i - j) * nums[i-1]);
                     break;
                 }else if(nums[j-1] != nums[i-1]){
-                    max_sum[i] = max_sum[j]+(i-j)*nums[i];
+                    max_sum[i] = max_sum[j]+(i-j)*nums[i-1];
                     break;
                 }
             }
