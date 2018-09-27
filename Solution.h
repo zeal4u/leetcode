@@ -343,7 +343,7 @@ public:
 
         for (int i = 0; i < len; ++i) storage[i][i] = 1;
         for (int k = 1; k < len; ++k) {
-            for (int j = 0; j < len-k; ++j) {
+            for (int j = 0; j < len - k; ++j) {
                 storage[j][j + k] = s[j] == s[j + k] ? 2 + storage[j + 1][j + k - 1] : max(storage[j + 1][j + k],
                                                                                            storage[j][j + k - 1]);
             }
@@ -352,27 +352,27 @@ public:
     }
 
     // problem 861
-    int matrixScore(vector<vector<int>>& A) {
+    int matrixScore(vector<vector<int>> &A) {
         vector<vector<int>> B = A;
 
         // 1. toggle any row to make 1s are at the highest digit.
-        for(int i=0;i<B.size();++i){
-            if(B[i][0] == 0){
-                for(int j = 0;j<B[i].size();++j){
+        for (int i = 0; i < B.size(); ++i) {
+            if (B[i][0] == 0) {
+                for (int j = 0; j < B[i].size(); ++j) {
                     B[i][j] ^= 1;
                 }
             }
         }
         // 2. toggle any column to make 1s more than 0s
-        for(int j=1;j<B[0].size();++j){
+        for (int j = 1; j < B[0].size(); ++j) {
             int count = 0;
-            for(int i = 0;i<B.size();++i){
-                if(B[i][j]==0)
+            for (int i = 0; i < B.size(); ++i) {
+                if (B[i][j] == 0)
                     count++;
-                
+
             }
-            if(count > B.size()/2){
-                for(int i = 0;i<B.size();++i){
+            if (count > B.size() / 2) {
+                for (int i = 0; i < B.size(); ++i) {
                     B[i][j] ^= 1;
                 }
             }
@@ -380,8 +380,8 @@ public:
 
         int sum = 0;
         int power = 1;
-        for(int i=B[0].size()-1; i>=0;--i){
-            for(int j = 0;j<B.size();++j){
+        for (int i = B[0].size() - 1; i >= 0; --i) {
+            for (int j = 0; j < B.size(); ++j) {
                 sum += B[j][i] * power;
             }
             power *= 2;
@@ -391,7 +391,7 @@ public:
     }
 
     // problem 797
-    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>> &graph) {
         int n = graph.size();
         vector<vector<int>> routes;
 
@@ -402,56 +402,98 @@ public:
     }
 
     // problem 797
-    void visitGraph(vector<vector<int>>& graph, vector<vector<int>>& routes, vector<int> cur_route, int cur_node){
+    void visitGraph(vector<vector<int>> &graph, vector<vector<int>> &routes, vector<int> cur_route, int cur_node) {
         cur_route.push_back(cur_node);
-        if(cur_node == graph.size()-1) {
+        if (cur_node == graph.size() - 1) {
             routes.push_back(cur_route);
         }
-        for(int i: graph[cur_node])
+        for (int i: graph[cur_node])
             visitGraph(graph, routes, cur_route, i);
     }
 
     // problem 190
     uint32_t reverseBits(uint32_t n) {
         uint32_t result = 0;
-        for(int i=0;i<32;++i){
-            result |= ((n>>i)&1) << (31-i);
+        for (int i = 0; i < 32; ++i) {
+            result |= ((n >> i) & 1) << (31 - i);
         }
         return result;
     }
 
     // problem 740
-    int deleteAndEarn(vector<int>& nums) {
-        if(nums.empty())
+    int deleteAndEarn(vector<int> &nums) {
+        if (nums.empty())
             return 0;
         int n = nums.size();
         sort(nums.begin(), nums.end());
 
-        vector<int> max_sum(n+1, 0);
+        vector<int> max_sum(n + 1, 0);
         max_sum[1] = nums[0];
         // if pick num[i], then every value equals to nums[i]-1 and nums[i]+1 needs to be deleted
-        for(int i=2;i<=n;++i) {
-            int j = i-1;
-            for(;j>0;--j) {
-                if (nums[j-1] == nums[i-1]- 1) {
+        for (int i = 2; i <= n; ++i) {
+            // find nums having same value
+            int j = i - 1;
+            for (; j > 0; --j) {
+                // diff value needs deleting.
+                if (nums[j - 1] == nums[i - 1] - 1) {
                     int k = j - 1;
-                    for (;k > 0; --k) {
+                    // compute number of value equals to nums[i] - 1
+                    for (; k > 0; --k) {
                         if (nums[j - 1] != nums[k - 1]) {
                             break;
                         }
                     }
-                    max_sum[i] = max(max_sum[j], max_sum[k] + (i - j) * nums[i-1]);
+                    max_sum[i] = max(max_sum[j], max_sum[k] + (i - j) * nums[i - 1]);
                     break;
-                }else if(nums[j-1] != nums[i-1]){
-                    max_sum[i] = max_sum[j]+(i-j)*nums[i-1];
+                } else if (nums[j - 1] != nums[i - 1]) {
+                    max_sum[i] = max_sum[j] + (i - j) * nums[i - 1];
                     break;
                 }
             }
-            if(j==0){
-                max_sum[i] = max_sum[j]+(i-j)*nums[i-1];
+            if (j == 0) {
+                max_sum[i] = max_sum[j] + (i - j) * nums[i - 1];
             }
         }
         return max_sum[n];
+    }
+
+    // problem 21
+    struct ListNode {
+        int val;
+        ListNode *next;
+
+        ListNode(int x) : val(x), next(NULL) {}
+    };
+
+    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
+        if (l1 == nullptr)
+            return l2;
+        if (l2 == nullptr)
+            return l1;
+        ListNode result_obj = ListNode(0);
+        ListNode* result = & result_obj;
+        ListNode *p_node = result;
+        while (l1 && l2) {
+            if (l1->val > l2->val) {
+                p_node->next = l2;
+                l2 = l2->next;
+            } else {
+                p_node->next = l1;
+                l1 = l1->next;
+            }
+            p_node = p_node->next;
+        }
+        while (l1) {
+            p_node->next = l1;
+            l1 = l1->next;
+            p_node = p_node->next;
+        }
+        while (l2) {
+            p_node->next = l2;
+            l2 = l2->next;
+            p_node = p_node->next;
+        }
+        return result->next;
     }
 };
 
