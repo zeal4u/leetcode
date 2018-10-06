@@ -4,6 +4,11 @@
 int main() {
     Solution solution;
 
-    cout<<solution.trailingZeroes(1808548329)<<endl;
+    string S = "this apple is sweet";
+    string T = "this apple is sour";
+    vector<string> result = solution.uncommonFromSentences(S,T);
+    for(string s: result){
+        cout<< s<<" ";
+    }
     return 0;
 }

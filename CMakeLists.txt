@@ -3,4 +3,4 @@ project(leetcode)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(leetcode main.cpp Solution.cpp Solution.h Employee.h Node.h TreeNode.h)
+add_executable(leetcode main.cpp Solution.cpp Solution.h Employee.h Node.h TreeNode.h cmake-build-debug/Node.h)

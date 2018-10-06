@@ -8,9 +8,14 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <deque>
 #include <map>
 #include <set>
 #include <algorithm>
+#include <cstdlib>
+#include <time.h>
+#include <cmath>
+#include <stdlib.h>
 
 #include "Employee.h"
 #include "Node.h"
@@ -520,7 +525,7 @@ public:
                 } else {
                     count--;
                 }
-            }else{
+            } else {
                 last_value = *item;
                 count = 1;
             }
@@ -533,10 +538,515 @@ public:
     int trailingZeroes(int n) {
         int result = 0;
 
-        for(long long i=5;n/i>0;i*=5){
-            result += (n/i);
+        for (long long i = 5; n / i > 0; i *= 5) {
+            result += (n / i);
         }
         return result;
+    }
+
+    // problem 728
+    vector<int> selfDividingNumbers(int left, int right) {
+        vector<int> result;
+        int tmp = 0, digit = 0;
+        bool flag;
+        for (int i = left; i <= right; ++i) {
+            flag = true;
+            tmp = i;
+            while (tmp > 0) {
+                digit = tmp % 10;
+                if (digit == 0 || i % digit != 0) {
+                    flag = false;
+                    break;
+                }
+                tmp = tmp / 10;
+            }
+            if (flag)
+                result.push_back(i);
+        }
+        return result;
+    }
+
+    // problem 875
+    int minEatingSpeed(vector<int> &piles, int H) {
+        int low = 1, high = *max_element(piles.begin(), piles.end());
+        while (low < high) {
+            int middle = (low + high) / 2;
+            int total_times = 0;
+            for (int i:piles) {
+                total_times += ceil(i * 1.0 / middle);
+            }
+            if (total_times > H)
+                low = middle + 1;
+            else
+                high = middle;
+        }
+        return low;
+    }
+
+    // problem 862
+    int shortestSubarray(vector<int> &A, int K) {
+        int n = A.size();
+        int res = n + 1;
+        vector<int> B(n + 1, 0);
+        for (int i = 0; i < n; ++i)
+            B[i + 1] = B[i] + A[i];
+
+        deque<int> d;
+        for (int i = 0; i <= n; ++i) {
+            while (!d.empty() && B[i] - B[d.front()] >= K) {
+                res = min(res, i - d.front());
+                d.pop_front();
+            }
+            while (!d.empty() && B[i] <= B[d.back()]) {
+                d.pop_back();
+            }
+            d.push_back(i);
+        }
+        return res <= n ? res : -1;
+    }
+
+    // problem 763
+    vector<int> partitionLabels(string S) {
+        vector<vector<int>> char_maps(26, vector<int>());
+        for (int i = 0; i < S.length(); ++i) {
+            char_maps[S[i] - 'a'].push_back(i);
+        }
+
+        vector<int> result;
+        int end = -1, cur = 0, start = 0, char_i;
+        while (cur < S.length()) {
+            char_i = S[cur] - 'a';
+            if (end == -1) {
+                start = cur;
+                end = char_maps[char_i].back();
+            }
+            if (end == cur) {
+                result.push_back(end - start + 1);
+                end = -1;
+            } else {
+                // update end if new_end > end
+                end = char_maps[char_i].back() > end ? char_maps[char_i].back() : end;
+            }
+            cur++;
+        }
+        return result;
+    }
+
+    TreeNode *tree_copy(TreeNode *pNode) {
+        if (pNode == nullptr)
+            return nullptr;
+        TreeNode *root = new TreeNode(pNode->val);
+        root->left = tree_copy(pNode->left);
+        root->right = tree_copy(pNode->right);
+        return root;
+    }
+
+    // problem 894
+    vector<TreeNode *> allPossibleFBT(int N) {
+        if ((N & 1) == 0)
+            return vector<TreeNode *>();
+        map<int, vector<TreeNode *>> component;
+        component[1] = vector<TreeNode *>(1, new TreeNode(0));
+        for (int cur_n = 3; cur_n <= N; cur_n += 2) {
+            component[cur_n] = vector<TreeNode *>();
+            for (int left_node_n = 1; left_node_n < cur_n; left_node_n += 2) {
+                int right_node_n = cur_n - 1 - left_node_n;
+                for (auto left_node:component[left_node_n]) {
+                    for (auto right_node:component[right_node_n]) {
+                        TreeNode *root = new TreeNode(0);
+                        root->left = tree_copy(left_node);
+                        root->right = tree_copy(right_node);
+                        component[cur_n].push_back(root);
+                    }
+                }
+            }
+        }
+        return component[2 * (N - 1) / 2 + 1];
+    }
+
+    // problem 883
+    int projectionArea(vector<vector<int>> &grid) {
+        if (grid.empty())
+            return 0;
+        int xy = 0, yz = 0, xz = 0;
+        int max_row = 0, max_col[grid[0].size()];
+        for (int i = 0; i < grid[0].size(); ++i)
+            max_col[i] = 0;
+
+        for (int i = 0; i < grid.size(); ++i) {
+            max_row = 0;
+            for (int j = 0; j < grid[0].size(); ++j) {
+                if (grid[i][j] != 0)
+                    xy++;
+                if (max_row < grid[i][j]) {
+                    max_row = grid[i][j];
+                }
+                if (max_col[j] < grid[i][j]) {
+                    max_col[j] = grid[i][j];
+                }
+            }
+            yz += max_row;
+        }
+        for (int i: max_col)
+            xz += i;
+        return xy + yz + xz;
+    }
+
+    // problem 2
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+        ListNode *result = new ListNode(0);
+        ListNode *pNode = result;
+        while (l1 && l2) {
+            pNode->next = new ListNode(0);
+            pNode = pNode->next;
+
+            pNode->val = l1->val + l2->val;
+
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+        if (l1) {
+            pNode->next = l1;
+        }
+        if (l2) {
+            pNode->next = l2;
+        }
+        pNode = result;
+        while (pNode) {
+            if (pNode->val >= 10) {
+                pNode->val = pNode->val - 10;
+                if (pNode->next)
+                    pNode->next->val++;
+                else {
+                    pNode->next = new ListNode(1);
+                }
+            }
+            pNode = pNode->next;
+        }
+        ListNode *ans = result->next;
+        delete result;
+        return ans;
+    }
+
+    // problem 701
+    TreeNode *insertIntoBST(TreeNode *root, int val) {
+        if (!root)
+            return new TreeNode(val);
+
+        TreeNode *result = tree_copy(root);
+        TreeNode *pNode = result;
+
+        bool flag = true;
+        while (flag) {
+            if (pNode->val > val) {
+                if (pNode->left) {
+                    pNode = pNode->left;
+                } else {
+                    pNode->left = new TreeNode(val);
+                    flag = false;
+                }
+            } else {
+                if (pNode->right) {
+                    pNode = pNode->right;
+                } else {
+                    pNode->right = new TreeNode(val);
+                    flag = false;
+                }
+            }
+        }
+        return result;
+    }
+
+    // problem 867
+    vector<vector<int>> transpose(vector<vector<int>> &A) {
+        vector<vector<int>> B;
+        if (A.empty())
+            return B;
+        for (int j = 0; j < A[0].size(); ++j) {
+            B.emplace_back();
+            for (auto &i : A) {
+                B[j].push_back(i[j]);
+            }
+        }
+        return B;
+    }
+
+    // problem 908
+    int smallestRangeI(vector<int> &A, int K) {
+        int A_max = -1, A_min = 10000;
+        for (int i:A) {
+            if (A_max < i)
+                A_max = i;
+            if (A_min > i)
+                A_min = i;
+        }
+        return A_max - A_min - 2 * K < 0 ? 0 : A_max - A_min - 2 * K;
+    }
+
+    // problem 876
+    ListNode *middleNode(ListNode *head) {
+        ListNode *slow = head, *fast = head;
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    }
+
+    // problem 885
+    vector<vector<int>> spiralMatrixIII(int R, int C, int r0, int c0) {
+        vector<vector<int>> result(R * C, vector<int>(2, 0));
+        int direction = 0, radius = 1, steps = 0;
+        bool direction_change = false;
+        for (int i = 0;;) {
+            if (r0 >= 0 && r0 < R && c0 >= 0 && c0 < C) {
+                // record legal pos
+                result[i][0] = r0, result[i][1] = c0;
+                i++;
+            }
+            if (i == R * C)
+                break;
+            switch (direction) {
+                case 0:
+                    c0++;
+                    if (direction_change) {
+                        radius++;
+                        direction_change = false;
+                    }
+                    break;
+                case 1:
+                    r0++;
+                    break;
+                case 2:
+                    c0--;
+                    if (direction_change) {
+                        radius++;
+                        direction_change = false;
+                    }
+                    break;
+                case 3:
+                    r0--;
+                    break;
+            }
+            steps++;
+            if (steps == radius) {
+                // change direction
+                direction = (direction + 1) % 4;
+                steps = 0;
+                direction_change = true;
+            }
+
+        }
+        return result;
+    }
+
+    // problem 700
+    TreeNode *searchBST(TreeNode *root, int val) {
+        TreeNode *pNode = root;
+        while (pNode && pNode->val != val) {
+            if (pNode->val < val)
+                pNode = pNode->right;
+            else
+                pNode = pNode->left;
+        }
+        return pNode;
+    }
+
+    // problem 806
+    vector<int> numberOfLines(vector<int> &widths, string S) {
+        int space = 100;
+        int count = 1;
+        for (char c:S) {
+            if (space - widths[c - 'a'] < 0) {
+                count++;
+                space = 100 - widths[c - 'a'];
+            } else {
+                space -= widths[c - 'a'];
+            }
+        }
+        vector<int> result(2, 0);
+        result[0] = count, result[1] = 100 - space;
+        return result;
+    }
+
+    // problem 559
+    int maxDepth(Node *root) {
+        if (!root)
+            return 0;
+        int res = 1;
+        for (Node *ch:root->children) {
+            res = max(res, maxDepth(ch) + 1);
+        }
+        return res;
+    }
+
+    // problem 811
+    vector<string> subdomainVisits(vector<string> &cpdomains) {
+        map<string, int> count;
+        for (string &s:cpdomains) {
+            for (int i = 0; i < s.length(); ++i) {
+                if (s[i] == ' ') {
+                    string domain = s.substr(i + 1, s.length() - 1 - i);
+                    int n = stoi(s.substr(0, i));
+                    count[domain] += n;
+                    for (int j = 0; j < domain.length(); ++j) {
+                        if (domain[j] == '.') {
+                            string sub_d = domain.substr(j + 1, domain.length() - 1 - j);
+                            count[sub_d] += n;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        vector<string> result;
+        for (auto &pair:count) {
+            result.push_back(to_string(pair.second) + " " + pair.first);
+        }
+        return result;
+    }
+
+    // problem 589
+    void _preorder(vector<int> &v, Node *pNode) {
+        if (pNode) {
+            v.push_back(pNode->val);
+            for (Node *child:pNode->children) {
+                _preorder(v, child);
+            }
+        }
+    }
+
+    // problem 589
+    vector<int> preorder(Node *root) {
+        vector<int> result;
+        _preorder(result, root);
+        return result;
+    }
+
+    // problem 821
+    vector<int> shortestToChar(string S, char C) {
+        vector<int> result;
+        vector<int> locate;
+        int n = S.length(), min_d = n;
+        for (int i = 0; i < n; ++i) {
+            if (S[i] == C)
+                locate.push_back(i);
+        }
+        for (int i = 0; i < n; ++i) {
+            min_d = n;
+            for (int l: locate) {
+                if (min_d > abs(l - i)) {
+                    min_d = abs(l - i);
+                    if (min_d == 0)
+                        break;
+                }
+            }
+            result.push_back(min_d);
+        }
+        return result;
+    }
+
+    // problem 791
+    struct my_cmp{
+        string cmp_str;
+        my_cmp(string str):cmp_str(str){}
+        bool operator()(char i, char j){
+            int ii = cmp_str.find(i);
+            int jj = cmp_str.find(j);
+            return ii < jj;
+        }
+    };
+
+    // problem 791
+    string customSortString(string S, string T) {
+        struct my_cmp my_cmp1(S);
+        sort(T.begin(), T.end(), my_cmp1);
+        return T;
+    }
+
+    // problem 872
+    bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+        vector<int> leafs1, leafs2;
+        _leafSimilar(leafs1, root1);
+        _leafSimilar(leafs2, root2);
+        if(leafs1.size() ==  leafs2.size())
+            for(int i=0;i<leafs1.size();++i){
+                if(leafs1[i] != leafs2[i])
+                    return false;
+            }
+        else{
+            return false;
+        }
+        return true;
+    }
+
+    // problem 872
+    void _leafSimilar(vector<int> &leafs, TreeNode * root){
+        if(root){
+            if(!(root->left || root->right))
+                leafs.push_back(root->val);
+            else{
+                _leafSimilar(leafs, root->left);
+                _leafSimilar(leafs, root->right);
+            }
+        }
+    }
+
+    // problem 884
+    vector<string> uncommonFromSentences(string A, string B) {
+        int a_n = A.size(), b_n = B.size();
+        int a_index=0, b_index=0;
+        map<string, int> count;
+        for(int i=0; i<a_n;++i){
+            if(A[i] == ' '){
+                count[A.substr(a_index, i - a_index)] += 1;
+                a_index = i+1;
+            }
+        }
+        count[A.substr(a_index, a_n - a_index)] += 1;
+        for(int i=0; i<b_n;++i){
+            if(B[i] == ' '){
+                count[B.substr(b_index, i - b_index)] += 1;
+                b_index = i+1;
+            }
+        }
+        count[B.substr(b_index, b_n - b_index)] += 1;
+
+        vector<string> result;
+        for(auto &pair:count){
+            if(pair.second == 1)
+                result.push_back(pair.first);
+        }
+        return result;
+    }
+
+
+    // problem 766
+    bool isToeplitzMatrix(vector<vector<int>>& matrix) {
+        int row = matrix.size();
+        int col = matrix[0].size();
+        for(int i=0;i<row;++i)
+            for(int j = 0;j< col;++j){
+                if(i+1<row && j+1<col && matrix[i][j] != matrix[i+1][j+1])
+                    return false;
+            }
+        return true;
+    }
+
+    // problem 868
+    int binaryGap(int N) {
+        int gap=0, start=-1, end=0, tmp;
+        for(int i=0;i<31;++i){
+            if(((N>>i)&1) == 1){
+                end = i;
+                tmp = end - start;
+                if(gap < tmp && start != -1){
+                    gap = tmp;
+                }
+                start = end;
+            }
+        }
+        return gap;
     }
 };
 
