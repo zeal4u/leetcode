@@ -16,6 +16,8 @@
 #include <time.h>
 #include <cmath>
 #include <stdlib.h>
+#include <stack>
+#include <numeric>
 
 #include "Employee.h"
 #include "Node.h"
@@ -947,10 +949,12 @@ public:
     }
 
     // problem 791
-    struct my_cmp{
+    struct my_cmp {
         string cmp_str;
-        my_cmp(string str):cmp_str(str){}
-        bool operator()(char i, char j){
+
+        my_cmp(string str) : cmp_str(str) {}
+
+        bool operator()(char i, char j) {
             int ii = cmp_str.find(i);
             int jj = cmp_str.find(j);
             return ii < jj;
@@ -965,27 +969,27 @@ public:
     }
 
     // problem 872
-    bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+    bool leafSimilar(TreeNode *root1, TreeNode *root2) {
         vector<int> leafs1, leafs2;
         _leafSimilar(leafs1, root1);
         _leafSimilar(leafs2, root2);
-        if(leafs1.size() ==  leafs2.size())
-            for(int i=0;i<leafs1.size();++i){
-                if(leafs1[i] != leafs2[i])
+        if (leafs1.size() == leafs2.size())
+            for (int i = 0; i < leafs1.size(); ++i) {
+                if (leafs1[i] != leafs2[i])
                     return false;
             }
-        else{
+        else {
             return false;
         }
         return true;
     }
 
     // problem 872
-    void _leafSimilar(vector<int> &leafs, TreeNode * root){
-        if(root){
-            if(!(root->left || root->right))
+    void _leafSimilar(vector<int> &leafs, TreeNode *root) {
+        if (root) {
+            if (!(root->left || root->right))
                 leafs.push_back(root->val);
-            else{
+            else {
                 _leafSimilar(leafs, root->left);
                 _leafSimilar(leafs, root->right);
             }
@@ -995,26 +999,26 @@ public:
     // problem 884
     vector<string> uncommonFromSentences(string A, string B) {
         int a_n = A.size(), b_n = B.size();
-        int a_index=0, b_index=0;
+        int a_index = 0, b_index = 0;
         map<string, int> count;
-        for(int i=0; i<a_n;++i){
-            if(A[i] == ' '){
+        for (int i = 0; i < a_n; ++i) {
+            if (A[i] == ' ') {
                 count[A.substr(a_index, i - a_index)] += 1;
-                a_index = i+1;
+                a_index = i + 1;
             }
         }
         count[A.substr(a_index, a_n - a_index)] += 1;
-        for(int i=0; i<b_n;++i){
-            if(B[i] == ' '){
+        for (int i = 0; i < b_n; ++i) {
+            if (B[i] == ' ') {
                 count[B.substr(b_index, i - b_index)] += 1;
-                b_index = i+1;
+                b_index = i + 1;
             }
         }
         count[B.substr(b_index, b_n - b_index)] += 1;
 
         vector<string> result;
-        for(auto &pair:count){
-            if(pair.second == 1)
+        for (auto &pair:count) {
+            if (pair.second == 1)
                 result.push_back(pair.first);
         }
         return result;
@@ -1022,12 +1026,12 @@ public:
 
 
     // problem 766
-    bool isToeplitzMatrix(vector<vector<int>>& matrix) {
+    bool isToeplitzMatrix(vector<vector<int>> &matrix) {
         int row = matrix.size();
         int col = matrix[0].size();
-        for(int i=0;i<row;++i)
-            for(int j = 0;j< col;++j){
-                if(i+1<row && j+1<col && matrix[i][j] != matrix[i+1][j+1])
+        for (int i = 0; i < row; ++i)
+            for (int j = 0; j < col; ++j) {
+                if (i + 1 < row && j + 1 < col && matrix[i][j] != matrix[i + 1][j + 1])
                     return false;
             }
         return true;
@@ -1035,12 +1039,12 @@ public:
 
     // problem 868
     int binaryGap(int N) {
-        int gap=0, start=-1, end=0, tmp;
-        for(int i=0;i<31;++i){
-            if(((N>>i)&1) == 1){
+        int gap = 0, start = -1, end = 0, tmp;
+        for (int i = 0; i < 31; ++i) {
+            if (((N >> i) & 1) == 1) {
                 end = i;
                 tmp = end - start;
-                if(gap < tmp && start != -1){
+                if (gap < tmp && start != -1) {
                     gap = tmp;
                 }
                 start = end;
@@ -1048,6 +1052,420 @@ public:
         }
         return gap;
     }
+
+    // problem 682
+    int calPoints(vector<string> &ops) {
+        int sum = 0, n;
+        vector<int> integers;
+        for (auto item = ops.begin(); item != ops.end(); ++item) {
+            if (*item == "+") {
+                n = integers.size();
+                integers.push_back(integers[n - 1] + integers[n - 2]);
+            } else if (*item == "D") {
+                n = integers.size();
+                integers.push_back(integers[n - 1] * 2);
+            } else if (*item == "C") {
+                integers.pop_back();
+            } else {
+                integers.push_back(stoi(*item));
+            }
+        }
+        for (int i:integers)
+            sum += i;
+        return sum;
+    }
+
+    // problem 442
+    vector<int> findDuplicates(vector<int> &nums) {
+        vector<int> result;
+        int n = nums.size();
+        for (int i = 0; i < n; ++i) {
+            nums[abs(nums[i]) - 1] = -nums[abs(nums[i]) - 1];
+            if (nums[abs(nums[i]) - 1] > 0)
+                // 取负翻转两次为正
+                result.push_back(abs(nums[i]));
+        }
+        return result;
+    }
+
+    // problem 897
+    TreeNode *increasingBST(TreeNode *root) {
+        vector<int> in_order;
+        _increasingBST(in_order, root);
+        TreeNode *result = new TreeNode(0);
+        TreeNode *pNode = result;
+        for (int i: in_order) {
+            pNode->right = new TreeNode(i);
+            pNode = pNode->right;
+        }
+        return result->right;
+    }
+
+    // problem 897
+    void _increasingBST(vector<int> &in_order, TreeNode *root) {
+        if (root) {
+            _increasingBST(in_order, root->left);
+            in_order.push_back(root->val);
+            _increasingBST(in_order, root->right);
+        }
+    }
+
+    // problem 877
+    bool stoneGame(vector<int> &piles) {
+        return true;
+    }
+
+    // problem 841
+    bool canVisitAllRooms(vector<vector<int>> &rooms) {
+        set<int> all_keys = {0};
+        set<int> cur_keys(rooms[0].begin(), rooms[0].end());
+        set<int> next_keys;
+        while (!cur_keys.empty()) {
+            next_keys.clear();
+            for (int i : cur_keys) {
+                if (all_keys.find(i) == all_keys.end()) {
+                    next_keys.insert(rooms[i].begin(), rooms[i].end());
+                }
+            }
+            all_keys.insert(cur_keys.begin(), cur_keys.end());
+            cur_keys = next_keys;
+        }
+        return all_keys.size() == rooms.size();
+    }
+
+    // problem 693
+    bool hasAlternatingBits(int n) {
+        long long i = (n & 1) == 1 ? 1 : 0;
+        long long factor = i == 1 ? 4 : 2;
+        while (i < n) {
+            i += factor;
+            factor *= 4;
+        }
+        return i == n;
+    }
+
+    // problem 540
+    int singleNonDuplicate(vector<int> &nums) {
+        int start = 0, end = nums.size() - 1;
+        while (start < end) {
+            int mid = (start + end) / 2;
+            if (mid % 2 == 1) mid--;
+            if (nums[mid] != nums[mid + 1]) end = mid;
+            else start = mid + 2;
+        }
+        return nums[start];
+    }
+
+    // problem 739
+    vector<int> dailyTemperatures(vector<int> &temperatures) {
+        int n = temperatures.size();
+        vector<int> result(n, 0);
+        stack<int> s;
+        for (int i = n - 1; i >= 0; --i) {
+            while (!s.empty() && temperatures[i] >= temperatures[s.top()]) {
+                s.pop();
+            }
+            result[i] = s.empty() ? 0 : s.top() - i;
+            s.push(i);
+        }
+        return result;
+    }
+
+    // problem 429
+    vector<vector<int>> levelOrder(Node *root) {
+        vector<vector<int>> result;
+        if (!root)
+            return result;
+        vector<Node *> cur_level = {root};
+        vector<Node *> next_level;
+        while (!cur_level.empty()) {
+            next_level.clear();
+            result.push_back(vector<int>());
+            for (Node *n:cur_level) {
+                if (n) {
+                    next_level.insert(next_level.end(), n->children.begin(), n->children.end());
+                    result.back().push_back(n->val);
+                }
+            }
+            cur_level = next_level;
+        }
+        return result;
+    }
+
+    // problem 896
+    bool isMonotonic(vector<int> &A) {
+        int n = A.size();
+        if (n <= 2)
+            return true;
+        int direction = A[1] - A[0], tmp;
+        for (int i = 1; i < n - 1; ++i) {
+            tmp = A[i + 1] - A[i];
+            if (tmp == 0)
+                continue;
+            else if (tmp * direction < 0)
+                return false;
+            else
+                direction = tmp;
+        }
+        return true;
+    }
+
+    // problem 889
+    TreeNode *constructFromPrePost(vector<int> &pre, vector<int> &post) {
+        vector<TreeNode *> s;
+        TreeNode *node;
+        s.push_back(new TreeNode(pre[0]));
+        for (int i = 1, j = 0; i < pre.size(); ++i) {
+            while (s.back()->val == post[j]) {
+                s.pop_back();
+                j++;
+            }
+            node = new TreeNode(pre[i]);
+            if (s.back()->left == nullptr) {
+                s.back()->left = node;
+            } else {
+                s.back()->right = node;
+            }
+            s.push_back(node);
+        }
+        return s[0];
+    }
+
+    // problem 892
+    int surfaceArea(vector<vector<int>> &grid) {
+        int col = grid[0].size();
+        int row = grid.size();
+        int result = 0;
+        int front, back, left, right;
+        for (int i = 0; i < row; ++i) {
+            for (int j = 0; j < col; ++j) {
+                if (grid[i][j]) {
+                    result += 2;
+                    if (i - 1 >= 0) {
+                        back = grid[i][j] - grid[i - 1][j];
+                        result += back > 0 ? back : 0;
+                    } else {
+                        result += grid[i][j];
+                    }
+                    if (i + 1 < row) {
+                        front = grid[i][j] - grid[i + 1][j];
+                        result += front > 0 ? front : 0;
+                    } else {
+                        result += grid[i][j];
+                    }
+                    if (j - 1 >= 0) {
+
+                        left = grid[i][j] - grid[i][j - 1];
+                        result += left > 0 ? left : 0;
+                    } else {
+                        result += grid[i][j];
+                    }
+                    if (j + 1 < col) {
+                        right = grid[i][j] - grid[i][j + 1];
+                        result += right > 0 ? right : 0;
+                    } else {
+                        result += grid[i][j];
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    // problem 888
+    vector<int> fairCandySwap(vector<int> &A, vector<int> &B) {
+        vector<int> result(2, 0);
+        int sum_a = accumulate(A.begin(), A.end(), 0), sum_b = accumulate(B.begin(), B.end(), 0);
+
+        int diff = (sum_a - sum_b) / 2;
+        for (int i:A)
+            for (int j:B) {
+                if (i - j == diff) {
+                    result[0] = i;
+                    result[1] = j;
+                    return result;
+                }
+            }
+        return result;
+    }
+
+    // problem 647
+    int countSubstrings(string s) {
+        int n = s.length(), result = n;
+        vector<vector<bool>> dp(n, vector<bool>(n, 0));
+
+        for (int i = 0; i < n; ++i) dp[i][i] = true;
+
+        for (int i = 1; i < n; ++i) {
+            for (int j = 0; j <= n - i - 1; ++j) {
+                dp[j][j + i] = s[j] == s[j + i] && (j + 1 <= j + i - 1 ? dp[j + 1][j + i - 1] : true);
+                result += dp[j][j + i];
+            }
+        }
+        return result;
+    }
+
+    // problem 784
+    vector<string> letterCasePermutation(string S) {
+        vector<string> result = {S};
+        int n = 0;
+        for (int i = 0; i < S.length(); ++i) {
+            if (S[i] >= '0' && S[i] <= '9')
+                continue;
+            n = result.size();
+            for (int j=0;j<n;++j) {
+                string s = result[j];
+                if (s[i] >= 'a' && s[i] <= 'z') {
+                    s[i] = s[i] - 'a' + 'A';
+                } else {
+                    s[i] = s[i] - 'A' + 'a';
+                }
+                result.push_back(s);
+            }
+        }
+        return result;
+    }
+
+    // problem 812
+    double largestTriangleArea(vector<vector<int>>& points) {
+        double res = 0;
+        for(auto &i:points)
+            for(auto &j:points)
+                for(auto &k:points)
+                    res = max(res, 0.5*(i[0]*(j[1]-k[1])+ j[0]*(k[1]-i[1])+k[0]*(i[1]-j[1])));
+        return res;
+    }
+
+    // problem 865
+    int scoreOfParentheses(string S) {
+        int result = 0;
+        stack<char> sk;
+        bool flag = true;
+        for(char c:S){
+            if(c == '(') {
+                sk.push(c);
+                flag = true;
+            } else {
+                if(flag)
+                    result += pow(2,sk.size()-1);
+                flag = false;
+                sk.pop();
+            }
+        }
+        return result;
+    }
+
+    // problem 695
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int result = 0, row = grid.size(), col = grid[0].size();
+        vector<vector<bool>> flags(row, vector<bool>(col, false));
+        for(int i=0;i<row;++i){
+            for(int j=0;j<col;++j){
+                result = max(result, _explore_island(flags, grid, i, j));
+            }
+        }
+        return result;
+    }
+
+    // problem 695
+    int _explore_island(vector<vector<bool>> &flag, vector<vector<int>> &grid, int i, int j){
+        if(i>=0 && i<grid.size() && j>=0 && j<grid[0].size() && !flag[i][j] && grid[i][j]){
+            flag[i][j] = true;
+            return 1+_explore_island(flag, grid, i-1,j)+_explore_island(flag, grid, i+1,j)+_explore_island(flag, grid, i, j-1)+_explore_island(flag, grid, i,j+1);
+        }else{
+            return 0;
+        }
+    }
+
+    // problem 789
+    bool escapeGhosts(vector<vector<int>>& ghosts, vector<int>& target) {
+        int distance = abs(target[0]) + abs(target[1]);
+        for(vector<int> &g:ghosts){
+            if(distance >= abs(g[0]-target[0])+abs(g[1]-target[1])){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // problem 451
+    struct lenCmp{
+        bool operator()(string i, string j){
+            return i.length() > j.length();
+        }
+    };
+
+    // problem 451
+    string frequencySort(string s) {
+        map<char, int> count;
+        for(char c:s){
+            count[c]++;
+        }
+        vector<string> re_s;
+        for(auto p:count){
+            re_s.push_back(string(p.second, p.first));
+        }
+        struct lenCmp lenCmp1;
+        sort(re_s.begin(), re_s.end(), lenCmp1);
+        string result;
+        for(string str:re_s){
+            result+=str;
+        }
+        return result;
+    }
+
+    // problem 609
+    vector<vector<string>> findDuplicate(vector<string>& paths) {
+        int start, end, mark;
+        map<string, vector<string>> record;
+        for(string p: paths){
+            mark = p.find(' ');
+            string dir = p.substr(0, mark)+"/";
+            for(int i = mark+1;i<p.length();++i) {
+                if(p[i]==' ')
+                    mark = i;
+                else if(p[i]=='(')
+                    start = i;
+                else if(p[i] == ')') {
+                    end = i;
+                    record[p.substr(start + 1, end - start - 1)].push_back(dir+p.substr(mark+1, start-mark-1));
+                }
+            }
+        }
+        vector<vector<string>> result;
+        for(const auto &p: record){
+            if(p.second.size()!=1)
+                result.push_back(p.second);
+        }
+        return result;
+    }
+
+    // problem 526
+    void justTry(vector<bool> &flags, int N, int pos, int *count) {
+        if(pos > N) {
+            (*count)++;
+            return;
+        }
+        for(int i=1;i<=N;++i){
+            if(!flags[i] && (i%pos==0||pos%i==0)){
+                flags[i] = true;
+                justTry(flags,N, pos+1, count);
+                flags[i] = false;
+            }
+        }
+    }
+
+    // problem 526
+    int countArrangement(int N) {
+        if(N == 0) return 0;
+        int * count = new int(0), pos = 1;
+        vector<bool> flags(N+1, false);
+
+        justTry(flags, N, pos, count);
+        return *count;
+    }
+
+
 };
 
 #endif //LEETCODE_SOLUTION_H
