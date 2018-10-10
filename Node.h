@@ -1,5 +1,5 @@
 //
-// Created by zeal4u on 2018/9/19.
+// Created by zeal4u on 2018/10/5.
 //
 
 #ifndef LEETCODE_NODE_H
@@ -7,9 +7,7 @@
 
 #include <vector>
 
-
 using namespace std;
-
 
 class Node {
 public:

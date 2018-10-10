@@ -1603,6 +1603,25 @@ public:
         }
         return count;
     }
+
+    // problem 565
+    int arrayNesting(vector<int>& nums) {
+        int n = nums.size(), result = 0;
+        vector<bool> flags(n, false);
+        int cur = 0, count= 0;
+        for(int i=0;i<n;++i){
+            cur = i;
+            count = 0;
+            while(!flags[cur]){
+                count++;
+                flags[cur] = true;
+                cur = nums[cur];
+            }
+            if(result < count)
+                result = count;
+        }
+        return result;
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H
