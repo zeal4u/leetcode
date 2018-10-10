@@ -4,6 +4,7 @@
 int main() {
     Solution solution;
 
-    cout<<solution.countArrangement(8);
+    vector<vector<int>> circles = {{1,0,0,1},{0,1,1,0},{0,1,1,1},{1,0,1,1}};
+    cout<<solution.findCircleNum(circles);
     return 0;
 }

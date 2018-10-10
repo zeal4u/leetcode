@@ -1465,7 +1465,144 @@ public:
         return *count;
     }
 
+    // problem 508
+    vector<int> findFrequentTreeSum(TreeNode* root) {
+        map<int, int> sums;
 
+        computeSum(root, sums);
+
+        vector<int> result;
+        int max_s = INT32_MIN;
+        for(auto &p : sums){
+            if(max_s < p.second)
+                max_s = p.second;
+        }
+        for(auto &p : sums){
+            if(max_s == p.second)
+                result.push_back(p.first);
+        }
+        return result;
+    }
+
+    // problem 508
+    int computeSum(TreeNode *root, map<int, int> &sums){
+        int result = 0;
+        if(root != nullptr){
+            result = root->val + computeSum(root->left, sums) + computeSum(root->right, sums);
+            sums[result]++;
+        }
+        return result;
+    }
+
+    // problem 712
+    int minimumDeleteSum(string s1, string s2) {
+        int l_s1 = s1.length(), l_s2 = s2.length();
+        vector<vector<int>> dp(l_s1+1, vector<int>(l_s2+1));
+        for(int j=1;j<=l_s2;++j)
+            dp[0][j] = dp[0][j-1] + s2[j-1];
+        for(int i=1;i<=l_s1;++i){
+            dp[i][0] = dp[i-1][0] + s1[i-1];
+            for(int j = 1;j<=l_s2;++j){
+                if(s1[i-1] == s2[j-1]){
+                    dp[i][j] = dp[i-1][j-1];
+                }else{
+                    dp[i][j] = min(dp[i-1][j] + s1[i-1], dp[i][j-1] + s2[j-1]);
+                }
+            }
+        }
+        return dp[l_s1][l_s2];
+    }
+
+    // problem 865
+    pair<int, TreeNode*> deep(TreeNode *pNode) {
+        if(pNode== nullptr)
+            return {0, nullptr};
+        pair<int, TreeNode*> l = deep(pNode->left), r = deep(pNode->right);
+        int d1 = l.first, d2 = r.first;
+        return {max(d1, d2)+1, d1==d2?pNode:d1>d2?l.second:r.second};
+    }
+
+    // problem 865
+    TreeNode* subtreeWithAllDeepest(TreeNode* root) {
+        return deep(root).second;
+    }
+
+    // problem 389, char is same as number
+    char findTheDifference(string s, string t) {
+        char x = 0;
+        for(char &c:s){
+            x ^= c;
+        }
+        for(char &c:t){
+            x ^= c;
+        }
+        return x;
+    }
+
+    // problem 462
+    int minMoves2(vector<int>& nums) {
+        nth_element(nums.begin(), nums.begin()+nums.size()/2, nums.end());
+        int result = 0,mid = nums[nums.size()/2];
+        for(int i:nums){
+            result += abs(nums[i]-mid);
+        }
+        return result;
+    }
+
+    // problem 696
+    int countBinarySubstrings(string s) {
+        int result = 0;
+        int pre=0,count = 1;
+        for(int i=1;i<s.length();++i){
+            if(s[i] == s[i-1]){
+                count++;
+            }else{
+                result += min(count, pre);
+                pre = count;
+                count = 1;
+            }
+        }
+        return result + min(count, pre);
+    }
+
+    // problem 653
+    bool findTargetDFS(set<int> &s, TreeNode *root, int k){
+        if(!root)
+            return false;
+        if(s.count(k-root->val)) return true;
+
+        s.insert(root->val);
+        return findTargetDFS(s, root->left, k) || findTargetDFS(s, root->right, k);
+    }
+    // problem 653
+    bool findTarget(TreeNode* root, int k) {
+        set<int> s;
+        return findTargetDFS(s, root, k);
+    }
+
+    // problem 547
+    void searchFriendCircle(vector<bool> &flags,vector<vector<int>> &M,int cur){
+        flags[cur] = true;
+        for(int i=0;i<flags.size();++i){
+            if(!flags[i] && M[cur][i]){
+                searchFriendCircle(flags, M, i);
+            }
+        }
+    }
+    // problem 547
+    int findCircleNum(vector<vector<int>>& M) {
+        int n = M.size(), count = 0, cur = 0;
+        vector<bool> flags(n, false);
+        for(int i = 0;i<n;++i) {
+            for(int j = 0;j<n;++j) {
+                if (!flags[i] && M[i][j]) {
+                    count++;
+                    searchFriendCircle(flags, M, i);
+                }
+            }
+        }
+        return count;
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H
