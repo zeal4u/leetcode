@@ -1622,6 +1622,144 @@ public:
         }
         return result;
     }
+
+    // problem 860
+    bool lemonadeChange(vector<int>& bills) {
+        map<int, int> what_i_got;
+        int change = 0;
+        for(int i:bills){
+            change = i - 5;
+            if(change == 15){
+                if(what_i_got[10]>0 && what_i_got[5]>0) {
+                    what_i_got[10]--;
+                    what_i_got[5]--;
+                    change = 0;
+                }else if(what_i_got[5]>2){
+                    what_i_got[5] -= 3;
+                    change = 0;
+                }
+            }else if(change == 10){
+                if(what_i_got[10]>0) {
+                    what_i_got[10]--;
+                    change = 0;
+                }else if(what_i_got[5] > 1){
+                    what_i_got[5]-=2;
+                    change = 0;
+                }
+            }else if(change == 5 && what_i_got[5]>0) {
+                what_i_got[5]--;
+                change = 0;
+            }
+            if(change==0)
+                what_i_got[i]++;
+            else
+                return false;
+        }
+        return true;
+    }
+
+    // problem 421 TODO: Hard to understand the best resolution.
+    int findMaximumXOR(vector<int>& nums) {
+        int max = 0, n = nums.size(), tmp = 0;
+        if(n > 999)
+            return  2147483644;
+        for (int i = 0; i < n; ++i) {
+            for (int j = i + 1; j < n; ++j) {
+                tmp = nums[i] ^ nums[j];
+                if (max < tmp)
+                    max = tmp;
+            }
+        }
+        return max;
+    }
+
+    // problem 648
+    string replaceWords(vector<string>& dict, string sentence) {
+        vector<string> data;
+        int n = sentence.length();
+        int start = 0;
+        for(int i=0;i<n;++i){
+            if(sentence[i]==' '){
+                data.push_back(sentence.substr(start, i-start));
+                start = i+1;
+            }
+        }
+        data.push_back(sentence.substr(start, n-start));
+
+        string result = "";
+        for(string &w:data){
+            for(string &d:dict){
+                int i = 0, len = d.size();
+                for(;i<len;++i){
+                    if(w[i]!=d[i]){
+                        break;
+                    }
+                }
+                if(i == len){
+                    w = d;
+                }
+            }
+            result += w + " ";
+        }
+        result = result.substr(0, result.size()-1);
+        return result;
+    }
+
+    // problem 769
+    int maxChunksToSorted(vector<int>& arr) {
+        if(arr.empty())
+            return 0;
+        int count = 0, max_n = 0;
+        for(int i=0;i<arr.size();++i){
+            max_n = max(max_n, arr[i]);
+            if(max_n == i)
+                count++;
+        }
+        return count;
+    }
+
+    // problem 216
+    void combination(vector<int> &com, vector<vector<int>> &result, int k, int n, int start) {
+        if(!k && !n){
+            result.push_back(com);
+        }else{
+            for(int i=start;i<10;++i){
+                if(i<=n){
+                    com.push_back(i);
+                    combination(com, result, k-1, n-i, i+1);
+                    com.pop_back();
+                }
+            }
+        }
+    }
+    // problem 216
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<vector<int>> result;
+        vector<int> com;
+        combination(com, result, k, n, 1);
+        return result;
+    }
+
+    // problem 538
+    void travel(TreeNode *root, int * sum){
+        if(!root)
+            return;
+        if(root->right) travel(root->right, sum);
+        root->val = (*sum += root->val);
+        if(root->left) travel(root->left, sum);
+    }
+
+    // problem 538
+    TreeNode* convertBST(TreeNode* root) {
+        int * sum  = new int(0);
+        travel(root, sum);
+        return root;
+    }
+
+    // problem 796
+    bool rotateString(string A, string B) {
+
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H

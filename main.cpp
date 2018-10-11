@@ -1,10 +1,10 @@
 #include <iostream>
 #include "Solution.h"
 
+int star_compute(int a, int b){
+    return static_cast<int>(pow(a, b - 1) + pow(b, a - 1));
+}
 int main() {
-    Solution solution;
-
-    vector<vector<int>> circles = {{1,0,0,1},{0,1,1,0},{0,1,1,1},{1,0,1,1}};
-    cout<<solution.findCircleNum(circles);
+    cout<<star_compute(1, star_compute(2,star_compute(3,star_compute(4,5))));
     return 0;
 }
