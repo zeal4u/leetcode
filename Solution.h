@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <stack>
 #include <numeric>
+#include <unordered_map>
 
 #include "Employee.h"
 #include "Node.h"
@@ -1758,7 +1759,122 @@ public:
 
     // problem 796
     bool rotateString(string A, string B) {
+        if(A.empty() && B.empty())
+            return true;
+        if(A.length() != B.length())
+            return false;
+        int n = A.length(), count = 0;
+        for(int i=0;i<n;++i){
+            if(A[i] == B[count]){
+                count++;
+            }else if(count){
+                i--;
+                count = 0;
+            }
+        }
+        if(count == 0)
+            return false;
 
+        for(int i = 0;i<n-count;++i){
+            if(A[i] == B[count]){
+                count++;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // problem 503
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        int n = nums.size(), count = 0, max = INT32_MIN, index = 0, tmp;
+        for(int i = 0;i<n;++i){
+            if(max < nums[i]){
+                index = i;
+                max = nums[i];
+            }
+        }
+
+        stack<int> stk;
+        vector<int> result(n, -1);
+        for(int i = index;(i+n)>=index+1;--i){
+            tmp = (i+n)%n;
+            while(!stk.empty() && stk.top() <= nums[tmp]){
+                stk.pop();
+            }
+            if(!stk.empty()){
+                result[tmp] = stk.top();
+            }
+            stk.push(nums[tmp]);
+        }
+        return result;
+    }
+
+    // problem 783
+    void _minDiffBST(TreeNode* root,int *m, stack<int> &s){
+        if(!root)
+            return;
+        if(root->right){
+            _minDiffBST(root->right, m, s);
+        }
+        if(!s.empty() && *m > s.top()-root->val){
+            *m = s.top() - root->val;
+        }
+        s.push(root->val);
+        if(root->left)
+            _minDiffBST(root->left,m,s);
+    }
+
+    // problem 783
+    int minDiffInBST(TreeNode* root) {
+        int *result = new int(INT32_MAX);
+        stack<int> bigger;
+        _minDiffBST(root, result, bigger);
+        return *result;
+    }
+
+    // problem 530
+    int getMinimumDifference(TreeNode* root) {
+        int *result = new int(INT32_MAX);
+        stack<int> bigger;
+        _minDiffBST(root, result, bigger);
+        return *result;
+    }
+
+    // problem 383
+    bool canConstruct(string ransomNote, string magazine) {
+        int dict[26]={0};
+        for(char &c:magazine){
+            dict[c-'a']++;
+        }
+        for(char &c:ransomNote){
+            dict[c-'a']--;
+        }
+        for(auto &p:dict){
+            if(p < 0)
+                return false;
+        }
+        return true;
+    }
+
+    // problem 454
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+        int count = 0, sum = 0, n = A.size();
+        unordered_map<int, int> record;
+        for(int i=0; i<n;++i){
+            for(int j=0;j<n;++j){
+                sum = A[i]+B[j];
+                record[sum]++;
+            }
+        }
+
+        for(int i=0; i<n;++i){
+            for(int j=0;j<n;++j){
+                sum = C[i]+D[j];
+                count += record[-sum];
+            }
+        }
+        return count;
     }
 };
 
