@@ -19,12 +19,22 @@
 #include <stack>
 #include <numeric>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "Employee.h"
 #include "Node.h"
 #include "TreeNode.h"
 
 using namespace std;
+
+
+struct ListNode {
+        int val;
+        ListNode *next;
+
+        ListNode(int x) : val(x), next(NULL) {}
+};
+
 
 class Solution {
 public:
@@ -466,12 +476,6 @@ public:
     }
 
     // problem 21
-    struct ListNode {
-        int val;
-        ListNode *next;
-
-        ListNode(int x) : val(x), next(NULL) {}
-    };
 
     ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
         if (l1 == nullptr)
@@ -1875,6 +1879,138 @@ public:
             }
         }
         return count;
+    }
+
+    // problem 733
+    void replaceColor(vector<vector<int>> &image, int sr, int sc, int oldColor, int newColor) {
+        if(sr>=0 && sc>=0 && sr<image.size() && sc<image[0].size() && image[sr][sc]==oldColor){
+            image[sr][sc] = newColor;
+            replaceColor(image, sr-1, sc, oldColor, newColor);
+            replaceColor(image, sr+1, sc, oldColor, newColor);
+            replaceColor(image, sr, sc-1, oldColor, newColor);
+            replaceColor(image, sr, sc+1, oldColor, newColor);
+        }
+    }
+
+    // problem 733
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        int oldColor = image[sr][sc];
+        if(newColor != oldColor)
+            replaceColor(image, sr, sc, oldColor, newColor);
+        return image;
+    }
+
+    // 78
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> result;
+        int n;
+        result.emplace_back();
+        for(int &each:nums){
+            n = result.size();
+            for(int i=0;i<n;++i){
+                vector<int> newSub = result[i];
+                newSub.push_back(each);
+                result.push_back(newSub);
+            }
+        }
+        return result;
+    }
+
+    // problem 404
+    int _sumOfLeftLeaves(TreeNode *parent, TreeNode *child) {
+        if(child) {
+            if(!(child->left||child->right) && parent->left == child){
+                return child->val;
+            }else{
+                return _sumOfLeftLeaves(child, child->left)+_sumOfLeftLeaves(child, child->right);
+            }
+        }else
+            return 0;
+    }
+
+    // problem 404
+    int sumOfLeftLeaves(TreeNode* root) {
+        if(root)
+            return _sumOfLeftLeaves(root, root->left) + _sumOfLeftLeaves(root, root->right);
+        else
+            return 0;
+    }
+
+    // problem 869
+    long countDigit(int N){
+        long result = 0;
+        for(;N>0;N/=10){
+            result += pow(10, N%10);
+        }
+        return result;
+    }
+
+    // problem 869
+    bool reorderedPowerOf2(int N) {
+        long c = countDigit(N);
+        for(int i = 0;i<32;++i){
+            if(c == countDigit(1<<i)) return true;
+        }
+        return false;
+    }
+
+    ListNode* reverseList(ListNode *pNode) {
+        if(!pNode || !pNode->next){
+            return pNode;
+        }
+        ListNode *pre = pNode;
+        ListNode *cur = pNode->next;
+        pre->next = nullptr;
+        ListNode *next;
+        while(cur){
+            next = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
+    }
+    ListNode *_addTwoNumbers(ListNode *l1, ListNode *l2) {
+        ListNode *result = new ListNode(0);
+        ListNode *pNode = result;
+        while (l1 && l2) {
+            pNode->next = new ListNode(0);
+            pNode = pNode->next;
+
+            pNode->val = l1->val + l2->val;
+
+            l1 = l1->next;
+            l2 = l2->next;
+        }
+        if (l1) {
+            pNode->next = l1;
+        }
+        if (l2) {
+            pNode->next = l2;
+        }
+        pNode = result;
+        while (pNode) {
+            if (pNode->val >= 10) {
+                pNode->val = pNode->val - 10;
+                if (pNode->next)
+                    pNode->next->val++;
+                else {
+                    pNode->next = new ListNode(1);
+                }
+            }
+            pNode = pNode->next;
+        }
+        ListNode *ans = result->next;
+        delete result;
+        return ans;
+    }
+    // problem 445
+    ListNode* addTwoNumbersII(ListNode* l1, ListNode* l2) {
+        ListNode *p1 = l1, *p2 = l2;
+        int count = 0;
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+        return reverseList(_addTwoNumbers(l1, l2));
     }
 };
 
