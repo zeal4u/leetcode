@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <deque>
 #include <map>
 #include <set>
@@ -1954,6 +1955,7 @@ public:
         return false;
     }
 
+    // problem 445
     ListNode* reverseList(ListNode *pNode) {
         if(!pNode || !pNode->next){
             return pNode;
@@ -1970,6 +1972,8 @@ public:
         }
         return pre;
     }
+
+    // problem 445
     ListNode *_addTwoNumbers(ListNode *l1, ListNode *l2) {
         ListNode *result = new ListNode(0);
         ListNode *pNode = result;
@@ -2004,6 +2008,7 @@ public:
         delete result;
         return ans;
     }
+
     // problem 445
     ListNode* addTwoNumbersII(ListNode* l1, ListNode* l2) {
         ListNode *p1 = l1, *p2 = l2;
@@ -2011,6 +2016,135 @@ public:
         l1 = reverseList(l1);
         l2 = reverseList(l2);
         return reverseList(_addTwoNumbers(l1, l2));
+    }
+
+    // problem 773
+    int _computeId(vector<vector<int>> &board){
+        int id = 0, digit = 100000;
+        for(int i = 0;i<6;i++){
+            id += board[i/3][i%3] * digit;
+            digit /= 10;
+        }
+        return id;
+    }
+
+    // problem 773
+    int slidingPuzzle(vector<vector<int>>& board) {
+        int id = _computeId(board);
+        unordered_set<string> records;
+        queue<string> q;
+        string id_s = to_string(id);
+        if(id < 100000){
+            id_s = "0"+id_s;
+        }
+        records.insert(id_s);
+        q.push(id_s);
+        int result = 0, index;
+        int dire[4] = {1,-1,3,-3};
+        string str, str_cp, target="123450";
+        while(!q.empty()){
+            for(int sz = q.size(); sz > 0;--sz){
+                str = q.front();
+                q.pop();
+                if(str == target) return result;
+                index = str.find('0');
+                for(int k=0;k<4;++k){
+                    int j = index+dire[k];
+                    if(j<0 || j>5 || index==2 && j==3 || index==3 && j==2 ) continue;
+
+                    str_cp = str;
+                    char tmp  = str_cp[index];
+                    str_cp[index] = str_cp[j];
+                    str_cp[j] = tmp;
+
+                    if(!records.count(str_cp)) {
+                        records.insert(str_cp);
+                        q.push(str_cp);
+                    }
+                }
+            }
+            ++result;
+        }
+        return -1;
+    }
+
+    // problem 697
+    int findShortestSubArray(vector<int>& nums) {
+        int degree = 0, result = nums.size(), tmp;
+
+        unordered_map<int, int> count;
+        unordered_map<int, int>  start;
+        for(int i=0;i<nums.size();++i){
+            count[nums[i]]++;
+
+            if(degree < count[nums[i]]){
+                // update result
+                degree = count[nums[i]];
+                result = start.count(nums[i])? i - start[nums[i]] + 1:1;
+            }else if (degree ==  count[nums[i]]){
+                // choose smaller result
+                tmp = start.count(nums[i])? i - start[nums[i]] + 1:1;
+                result = min(result, tmp);
+            }
+
+            if(!start.count(nums[i]))
+                start[nums[i]] = i;
+        }
+        return result;
+    }
+
+    // problem 455
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        int result = 0;
+
+        sort(g.begin(),g.end());
+        sort(s.begin(),s.end());
+
+        int i = 0, j=0;
+        while(i < g.size() && j < s.size()){
+            if(g[i] <= s[j]){
+                result++;
+                i++;
+            }
+            j++;
+        }
+        return result;
+    }
+
+    vector<ListNode*> splitListToParts(ListNode* root, int k) {
+        ListNode * pNode = root;
+        int size = 0;
+        while(pNode){
+            size++;
+            pNode = pNode->next;
+        }
+        int part_len = size/k, addition = size % k;
+        vector<ListNode*> result;
+        pNode  = root;
+
+        size = 0;
+        ListNode * start_p = root;
+        int tmp;
+        while(pNode){
+            size++;
+            tmp = result.size();
+            tmp =tmp >=addition? addition * (1 + part_len) + (tmp + 1 - addition) * part_len : (tmp+1)*(part_len+1);
+            if(size == tmp){
+                result.push_back(start_p);
+                start_p = pNode;
+                pNode = pNode->next;
+                start_p->next = nullptr;
+                start_p = pNode;
+            }else{
+                pNode = pNode->next;
+            }
+        }
+        k -= size;
+        while(k>0){
+            result.push_back(nullptr);
+            k--;
+        }
+        return result;
     }
 };
 

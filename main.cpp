@@ -5,15 +5,11 @@
 int main() {
     Solution solution;
 
-    ListNode * l1 = new ListNode(7);
-    l1->next = new ListNode(2);
-    l1->next->next = new ListNode(4);
-    l1->next->next->next = new ListNode(3);
-
-    ListNode * l2 = new ListNode(5);
-    l2->next = new ListNode(6);
-    l2->next->next = new ListNode(4);
-
-    solution.addTwoNumbersII(l1, l2);
+    ListNode *a1 = new ListNode(1);
+    ListNode *a2 = new ListNode(1);
+    ListNode *a3 = new ListNode(1);
+    ListNode *a4 = new ListNode(1);
+    a1->next = a2, a2->next = a3, a3->next = a4;
+    solution.splitListToParts(a1, 5);
     return 0;
 }

@@ -14,7 +14,9 @@ public:
     int val;
     vector<Node*> children;
 
-    Node() {}
+    Node(){}
+
+    Node(int val):val(val), children() {}
 
     Node(int _val, vector<Node*> _children) {
         val = _val;
