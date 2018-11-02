@@ -5,11 +5,7 @@
 int main() {
     Solution solution;
 
-    ListNode *a1 = new ListNode(1);
-    ListNode *a2 = new ListNode(1);
-    ListNode *a3 = new ListNode(1);
-    ListNode *a4 = new ListNode(1);
-    a1->next = a2, a2->next = a3, a3->next = a4;
-    solution.splitListToParts(a1, 5);
+    vector<vector<int>> edges = {{9,10},{5,8},{2,6},{1,5},{3,8},{4,9},{8,10},{4,10},{6,8},{7,9}};
+    solution.findRedundantConnection(edges);
     return 0;
 }

@@ -2146,6 +2146,92 @@ public:
         }
         return result;
     }
+
+    // problem 378
+    // modified quick sort
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        int n = matrix.size(), low = matrix[0][0], high = matrix[n-1][n-1], mid = 0;
+
+        while(low < high) {
+            mid = low + (high - low) / 2;
+            int count = 0, j = n - 1;
+            for (int i = 0; i < n; ++i) {
+                while (j >= 0 && matrix[i][j] > mid) j--;
+                count += (j + 1);
+            }
+
+            if (count < k) low = mid + 1;
+            else high = mid;
+        }
+        return low;
+    }
+
+    // problem 539
+    int _computeDiff(string a, string b){
+        int ah = stoi(a.substr(0, 2));
+        int bh = stoi(b.substr(0, 2));
+        int am = stoi(a.substr(3, 2));
+        int bm = stoi(b.substr(3, 2));
+        return am - bm + 60*(ah-bh);
+    }
+
+    // problem 539
+    int findMinDifference(vector<string>& timePoints) {
+        int n = timePoints.size();
+        sort(timePoints.begin(), timePoints.end());
+        int mindiff = INT32_MAX;
+        for(int i=0;i<n;i++){
+            int diff = abs(_computeDiff(timePoints[(i-1+n)%n], timePoints[i]));
+            diff = min(diff, 1440-diff);
+            mindiff = min(mindiff, diff);
+        }
+        return mindiff;
+    }
+
+    // problem 684
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        vector<unordered_set<int>> record;
+        vector<int> result;
+        for(auto &edge:edges){
+            bool no_set = true, combined = false;
+            vector<unordered_set<int>>::iterator one = record.end();
+            for(auto vertices = record.begin(); vertices!=record.end();vertices++) {
+                if(vertices->count(edge[0])&&vertices->count(edge[1])){
+                    no_set = false;
+                    result = edge;
+                    break;
+                }
+                else if(vertices->count(edge[0])){
+                    vertices->insert(edge[1]);
+                    no_set = false;
+                    if(one!= record.end()){
+                        vertices->insert(one->begin(),one->end());
+                        combined = true;
+                        break;
+                    } else{
+                        one = vertices;
+                    }
+                }else if(vertices->count(edge[1])){
+                    vertices->insert(edge[0]);
+                    no_set = false;
+                    if(one!= record.end()){
+                        vertices->insert(one->begin(),one->end());
+                        combined = true;
+                        break;
+                    } else{
+                        one = vertices;
+                    }
+                }
+            }
+            if(no_set){
+                record.push_back(unordered_set<int>({edge[0], edge[1]}));
+            }
+            if(combined){
+                record.erase(one);
+            }
+        }
+        return result;
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H
