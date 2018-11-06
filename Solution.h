@@ -21,6 +21,7 @@
 #include <numeric>
 #include <unordered_map>
 #include <unordered_set>
+#include <random>
 
 #include "Employee.h"
 #include "Node.h"
@@ -39,6 +40,7 @@ struct ListNode {
 
 class Solution {
 public:
+    Solution(){}
     // problem 771
     int numJewelsInStones(string J, string S) {
         int result = 0;
@@ -2231,6 +2233,82 @@ public:
             }
         }
         return result;
+    }
+
+
+    ListNode* head;
+    // problem 382
+    /** @param head The linked list's head.
+    Note that the head is guaranteed to be not null, so it contains at least one node. */
+    Solution(ListNode* head):head(head) {
+    }
+
+    /** Returns a random node's value. */
+    int getRandom() {
+        ListNode* p = head;
+        int result = head->val;
+        for(int i=1;p->next!=nullptr;++i){
+            p = p->next;
+            if(rand()%(i+1) == i) result = p->val;
+        }
+        return result;
+    }
+
+    // problem 477
+    int totalHammingDistance(vector<int>& nums) {
+        int count = 0, one = 0, size = nums.size();
+        for(int i=0;i<32;++i){
+            one = 0;
+            for(int &n:nums){
+                if(((n >> i)&1) == 1) one++;
+            }
+            count += one *(size-one);
+        }
+        return count;
+    }
+
+    // problem 167
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        int i=0, j = numbers.size()-1;
+        while(i<j){
+            if(numbers[i]+numbers[j]>target) j--;
+            if(numbers[i]+numbers[j]<target) i++;
+            if(numbers[i]+numbers[j] == target) break;
+        }
+        return vector<int>({i+1,j+1});
+    }
+
+    // problem 646
+    struct cmp646{
+        bool operator()(vector<int> i, vector<int> j) {
+            return i[1] < j[1];
+        }
+    };
+
+    // problem 646
+    int findLongestChain(vector<vector<int>>& pairs) {
+        struct cmp646 cmp;
+        sort(pairs.begin(), pairs.end(), cmp);
+        int result = 0, cur_tail = INT32_MIN;
+        for(auto &p :pairs){
+            if(p[0]>cur_tail){
+                result++;
+                cur_tail = p[1];
+            }
+        }
+        return result;
+    }
+
+    // problem 55
+    bool canJump(vector<int>& nums) {
+        if(nums.size()==0)
+            return false;
+        int max_range = nums[0], n = nums.size();
+        for(int i = 0;i<=max_range;++i){
+            if(max_range < i + nums[i]) max_range = i+nums[i];
+            if(max_range >= n-1) return true;
+        }
+        return false;
     }
 };
 
