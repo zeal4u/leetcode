@@ -2368,7 +2368,6 @@ public:
             return new_root;
         }
         vector<TreeNode *> cur_level = {move(root)}, nex_level;
-        root = cur_level[0];
         while(--d > 1 & !cur_level.empty()){
             nex_level.clear();
             for (auto &node: cur_level) {
@@ -2379,13 +2378,14 @@ public:
             }
             cur_level = nex_level;
         }
-        for (auto &node: cur_level) {
-            TreeNode *new_node = new TreeNode(v);
-            new_node->left = node->left;
-            node->left = new_node->left;
+        for (auto node: cur_level) {
+            TreeNode *new_left = new TreeNode(v);
+            new_left ->left = node->left;
+            node->left = new_left;
 
-            new_node->right = node->right;
-            node->right = new_node->right;
+            TreeNode *new_right = new TreeNode(v);
+            new_right->right = node->right;
+            node->right = new_right;
         }
         return root;
     }
