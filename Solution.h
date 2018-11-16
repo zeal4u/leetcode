@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <random>
+#include <utility>
 
 #include "Employee.h"
 #include "Node.h"
@@ -2354,6 +2355,39 @@ public:
         }
 
         return result;
+    }
+
+    // problem 623 pending
+    TreeNode* addOneRow(TreeNode* root, int v, int d)
+    {
+        if (d < 1)
+            return nullptr;
+        if (d == 1) {
+            TreeNode *new_root =  new TreeNode(v);
+            new_root->left = root;
+            return new_root;
+        }
+        vector<TreeNode *> cur_level = {move(root)}, nex_level;
+        root = cur_level[0];
+        while(--d > 1 & !cur_level.empty()){
+            nex_level.clear();
+            for (auto &node: cur_level) {
+                if (node->left)
+                    nex_level.push_back(move(node->left));
+                if (node->right)
+                    nex_level.push_back(move(node->right));
+            }
+            cur_level = nex_level;
+        }
+        for (auto &node: cur_level) {
+            TreeNode *new_node = new TreeNode(v);
+            new_node->left = node->left;
+            node->left = new_node->left;
+
+            new_node->right = node->right;
+            node->right = new_node->right;
+        }
+        return root;
     }
 };
 
