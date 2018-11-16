@@ -2310,6 +2310,51 @@ public:
         }
         return false;
     }
+
+    // problem 554
+    int leastBricks(vector<vector<int>>& wall) {
+        if(wall.empty())
+            return 0;
+        int width = accumulate(wall[0].begin(), wall[0].end(), 0), height = wall.size(), least = height;
+        vector<vector<int>> dp(height, vector<int>());
+        unordered_map<int, int> count;
+        for(int i=0;i<height;++i){
+            for(int j=0;j<wall[i].size() - 1; ++j) {
+                if (j) {
+                    dp[i].push_back(dp[i][j - 1] + wall[i][j]);
+                } else
+                    dp[i].push_back(wall[i][j]);
+                count[dp[i].back()]++;
+            }
+        }
+        for(auto &p:count){
+            if(height - p.second < least)
+                least = height - p.second;
+        }
+
+        return least;
+    }
+
+    // problem 599
+    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {
+        vector<string> result;
+
+        map<string, int> record;
+        int minSum = INT32_MAX;
+        for(int i=0;i<list1.size();++i) record[list1[i]] = i;
+        for(int i=0;i<list2.size();++i){
+            if(record.count(list2[i]) && record[list2[i]] + i <= minSum){
+                int tmp = record[list2[i]] + i;
+                if(tmp < minSum){
+                    minSum = tmp;
+                    result.clear();
+                }
+                result.push_back(list2[i]);
+            }
+        }
+
+        return result;
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H

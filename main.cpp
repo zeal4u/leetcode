@@ -5,7 +5,10 @@
 int main() {
     Solution solution;
 
-    vector<int> nums = {3,3,1,0,4};
-    cout<<solution.canJump(nums);
+    vector<string> list1 = {"Shogun","Piatti","Burger King","KFC"};
+    vector<string> list2 = {"Piatti","Shogun"};
+    auto result = solution.findRestaurant(list1, list2);
+    for(auto &r :result)
+        cout<<r<<" ";
     return 0;
 }
