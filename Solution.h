@@ -2389,6 +2389,26 @@ public:
         }
         return root;
     }
+
+    // problem 830
+    vector<vector<int>> largeGroupPositions(string S)
+    {
+        vector<vector<int>> result;
+        int start = 0;
+        for (int i = 1;i < S.length(); ++i) {
+            if (S[i] != S[i-1]){
+                if (i - start >= 3){
+                    result.push_back({start, i - 1});
+                }
+                start = i;
+            }
+        }
+        int size = S.length();
+        if (size - start >= 3)
+            result.push_back({start, size - 1});
+
+        return result;
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H
