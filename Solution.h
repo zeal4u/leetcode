@@ -2446,6 +2446,11 @@ public:
         }
         return min(dp[n] + cost[n-1], dp[n-1] + cost[n-2]);
     }
+
+    // problem 820
+    int minimumLengthEncoding(vector<string>& words) {
+
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H
