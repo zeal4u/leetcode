@@ -2409,6 +2409,18 @@ public:
 
         return result;
     }
+
+    // problem 746
+    int minCostClimbingStairs(vector<int>& cost)
+    {
+        vector<int> dp(cost.size()+1, 0);
+
+        int n = cost.size();
+        for (int i = 3; i <= n; i++) {
+            dp[i] = min(dp[i-1] + cost[i-2], dp[i-2]+cost[i-3]);
+        }
+        return min(dp[n] + cost[n-1], dp[n-1] + cost[n-2]);
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H
