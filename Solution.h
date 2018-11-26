@@ -2390,6 +2390,31 @@ public:
         return root;
     }
 
+    // problem 846
+    bool isNStraightHand(vector<int>& hand, int W)
+    {
+        if (hand.size() % W != 0 && hand.size() / W == W)
+            return false;
+        sort(hand.begin(), hand.end());
+        vector<int> store;
+        while (!hand.empty()) {
+            for (auto item = hand.begin(); item != hand.end();) {
+                if (store.size() == W) {
+                    break;
+                } else if (!store.empty() && store.back() != *item - 1) {
+                    item++;
+                } else {
+                    store.push_back(*item);
+                    item = hand.erase(item);
+                }
+            }
+            if (store.size() != W)
+                return false;
+            store.clear();
+        }
+        return true;
+    }
+
     // problem 830
     vector<vector<int>> largeGroupPositions(string S)
     {
