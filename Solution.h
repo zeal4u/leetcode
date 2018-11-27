@@ -2447,9 +2447,39 @@ public:
         return min(dp[n] + cost[n-1], dp[n-1] + cost[n-2]);
     }
 
+    typedef struct {
+        bool operator() (string a, string b)
+        {
+            return a.length() < b.length();
+        }
+    }cmp_820;
     // problem 820
-    int minimumLengthEncoding(vector<string>& words) {
-
+    int minimumLengthEncoding(vector<string>& words)
+    {
+        cmp_820 cmp;
+        int n = words.size(), sum = 0, len_i = 0, len_j = 0;
+        sort(words.begin(), words.end(), cmp);
+        bool ignore = false;
+        for (int i = 0; i < n; ++i) {
+            ignore = false;
+            len_i = words[i].length();
+            for (int j = i + 1; j < n; ++j) {
+                 len_j = words[j].length();
+                for (int k = 1; k <= len_i; ++k) {
+                    if (words[i][len_i - k] != words[j][len_j-k]) {
+                        break;
+                    } else if (k == len_i) {
+                        ignore = true;
+                    }
+                }
+                if (ignore) {
+                    break;
+                }
+            }
+            if (!ignore)
+                sum += len_i + 1;
+        }
+        return sum;
     }
 };
 
