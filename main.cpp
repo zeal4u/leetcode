@@ -5,7 +5,13 @@
 int main() {
     Solution solution;
 
-    vector<string> words = {"time", "me", "bell"};
-    cout<<solution.minimumLengthEncoding(words);
+    vector<int> candidates={2,3,7};
+    auto result = solution.combinationSum(candidates, 18);
+    for (auto &row:result){
+        for (auto &i:row)
+            cout<< i << " ";
+
+        cout<<endl;
+    }
     return 0;
 }

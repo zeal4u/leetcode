@@ -2481,6 +2481,96 @@ public:
         }
         return sum;
     }
+
+    // problem 925
+    bool isLongPressedName(string name, string typed)
+    {
+        int n_l = name.length(), t_l = typed.length(), i = 0, j = 0;
+        while (i < n_l && j < t_l) {
+            if (name [i] != typed[j])
+                return false;
+            if (i + 1 < n_l && name[i+1] != name[i])
+                while (typed[j] == name[i])
+                    j++;
+            else
+                j++;
+            i++;
+        }
+        while (j < t_l) {
+            if (typed[j] != name[i - 1])
+                return false;
+            j++;
+        }
+        return i == n_l && j == t_l;
+    }
+
+    // problem 39
+    bool _is_same(vector<int> &a, vector<int> &b)
+    {
+        if (a.size() == b.size()) {
+            sort(a.begin(), a.end());
+            sort(b.begin(), b.end());
+            for (int i = 0; i < a.size(); i++) {
+                if (a[i] != b[i])
+                    return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    // problem 39
+    vector<vector<int>> _combinationSum(map<int, vector<vector<int>>> &record, vector<int>& candidates, int target)
+    {
+        if (record.find(target) != record.end())
+            return record[target];
+
+        vector<vector<int>> result;
+        vector<vector<int>> child_res;
+        int tmp = 0;
+        for (int can : candidates) {
+            tmp = target - can;
+            if (tmp < 0)
+                break;
+            else if (tmp != 0) {
+                child_res = _combinationSum(record, candidates, tmp);
+                for (vector<int> &ch : child_res) {
+                    ch.push_back(can);
+                }
+                result.insert(result.end(), child_res.begin(), child_res.end());
+            } else {
+                result.push_back({can});
+            }
+        }
+        for (auto item1 = result.begin(); item1 != result.end(); ) {
+            bool flag = true;
+            for (auto item2 = item1 + 1; item2 != result.end(); ++item2) {
+                if (_is_same(*item1, *item2)) {
+                    item1 = result.erase(item1);
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                item1++;
+        }
+
+        if (!result.empty() && record.find(target) == record.end())
+            record[target] = result;
+        return result;
+    }
+    // problem 39
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target)
+    {
+        sort(candidates.begin(), candidates.end());
+        map<int, vector<vector<int>>> record;
+        return _combinationSum(record, candidates, target);
+    }
+
+    // problem 452
+    int findMinArrowShots(vector<pair<int, int>>& points) {
+
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H
