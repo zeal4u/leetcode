@@ -2568,8 +2568,42 @@ public:
     }
 
     // problem 452
-    int findMinArrowShots(vector<pair<int, int>>& points) {
-
+    typedef struct{
+        bool operator()(pair<int, int> &a, pair<int,int> &b){
+           return a.second < b.second;
+        }
+    }cmp452;
+    // problem 452
+    bool _is_cross(pair<int,int> &a,pair<int,int> &b)
+    {
+        return !(a.first > b.second || b.first > a.second);
+    }
+    // problem 452
+    int findMinArrowShots(vector<pair<int, int>>& points)
+    {
+        cmp452 cmp;
+        sort(points.begin(), points.end(), cmp);
+        vector<vector<pair<int,int>>> records;
+        for (auto &p : points) {
+            bool lonely = true;
+            for (auto &r : records) {
+                bool flag = true;
+                for (auto item = r.begin(); item != r.end(); ++item) {
+                    if (!_is_cross(*item, p)) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    r.push_back(p);
+                    lonely = false;
+                    break;
+                }
+            }
+            if (lonely)
+                records.push_back({p});
+        }
+        return records.size();
     }
 };
 
