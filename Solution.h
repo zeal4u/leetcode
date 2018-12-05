@@ -2605,6 +2605,78 @@ public:
         }
         return records.size();
     }
+
+    // problem 399
+    string _get_valid(map<string, double> &b_l, map<string, bool> &flags)
+    {
+        for (auto &b : b_l) {
+            if (!flags[b.first]) {
+                flags[b.first] = true;
+                return b.first;
+            }
+        }
+        return "";
+    }
+
+    // problem 399
+    vector<double> calcEquation(vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries)
+    {
+        map<string, map<string, double>> matrix;
+        set<string> vars;
+        for (int i = 0; i < equations.size(); ++i) {
+            matrix[equations[i].first][equations[i].second] = values[i];
+            matrix[equations[i].second][equations[i].first] = 1.0/values[i];
+            vars.insert(equations[i].first);
+            vars.insert(equations[i].second);
+        }
+        for (auto &v:vars) {
+            matrix[v][v] = 1.0;
+        }
+
+        vector<double> result;
+        for (auto &q : queries) {
+            string a = q.first;
+            string b = q.second;
+            if (vars.find(a) == vars.end() || vars.find(b) == vars.end()) {
+                result.push_back(-1.0);
+                continue;
+            }
+            if (matrix.find(a) != matrix.end() && matrix[a].find(b) != matrix[a].end()) {
+                result.push_back(matrix[a][b]);
+                continue;
+            }
+            map<string, bool> flags;
+            map<string, double> b_l = matrix[a];
+
+            string target = b;
+            stack<string> record;
+            while (a != target) {
+                if ((b = _get_valid(b_l, flags)) == "") {
+                    if (record.empty())
+                        break;
+                    b = record.top();
+                    record.pop();
+                } else {
+                    record.push(a);
+                }
+                a = b;
+                b_l = matrix[b];
+            }
+            double r = 1;
+            if (a != target) {
+                r = -1;
+            } else {
+                while (!record.empty()) {
+                    b = record.top();
+                    record.pop();
+                    r *= matrix[b][a];
+                    a = b;
+                }
+            }
+            result.push_back(r);
+        }
+        return result;
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H

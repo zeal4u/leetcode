@@ -5,7 +5,11 @@
 int main() {
     Solution solution;
 
-    vector<pair<int, int>> input = {{3,9},{7,12},{3,8},{6,8},{9,10},{2,9},{0,9},{3,9},{0,6},{2,8}};
-    solution.findMinArrowShots(input);
+    //vector<pair<string, string>> equations = {{"x1","x2"},{"x2","x3"},{"x1","x4"},{"x2","x5"}};
+    vector<pair<string, string>> equations = {{"a","b"},{"b","c"},{"b","d"}};
+    vector<double> values = {3.0,0.5,3.4};
+    //vector<pair<string, string>> queries = {{"x2","x4"},{"x1","x5"},{"x1","x3"},{"x5","x5"},{"x5","x1"},{"x3","x4"},{"x4","x3"},{"x6","x6"},{"x0","x0"}};
+    vector<pair<string, string>> queries = {{"a", "d"}};
+    solution.calcEquation(equations, values, queries);
     return 0;
 }
