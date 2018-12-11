@@ -2684,8 +2684,40 @@ public:
         return rec1[0] < rec2[2] && rec2[0] < rec1[2] && rec1[1] < rec2[3] && rec2[1] < rec1[3];
     }
 
-    int findTargetSumWays(vector<int>& nums, int S) {
+    // problem 494
+    int subsetSum(vector<int> &nums, int s)
+    {
+        vector<int> dp(s+1, 0);
+        dp[0] = 1;
+        for (int n : nums)
+            for (int i = s; i >= n; i--)
+                dp[i] += dp[i - n];
+        return dp[s];
+    }
 
+    // problem 494
+    int findTargetSumWays(vector<int>& nums, int S)
+    {
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        return sum < S || (S + sum) & 1 ? 0 : subsetSum(nums, (S + sum) >> 1);
+    }
+
+    // problem 416
+    bool canPartition(vector<int>& nums) {
+        int sum = accumulate(nums.begin(), nums.end(), 0);
+        if ((sum & 1) == 1)
+            return false;
+        sum = sum >> 1;
+        vector<int> dp(sum+1, 0);
+        dp[0] = 1;
+        for (int &n : nums) {
+            for (int i = sum; i >= n; --i) {
+                dp[i] += dp[i - n];
+            }
+            if (dp[sum])
+                return true;
+        }
+        return dp[sum] > 0;
     }
 };
 

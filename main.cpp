@@ -5,8 +5,7 @@
 int main() {
     Solution solution;
 
-    vector<int> rec1 = {5, 15, 8, 18};
-    vector<int> rec2 = {0, 3, 7, 9};
-    cout<<solution.isRectangleOverlap(rec1, rec2);
+    vector<int> nums = {1, 2, 3, 5};
+    cout<<solution.canPartition(nums)<<endl;
     return 0;
 }
