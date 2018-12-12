@@ -2728,7 +2728,8 @@ public:
     }cmp628;
 
     // problem 628
-    int maximumProduct(vector<int>& nums) {
+    int maximumProduct(vector<int>& nums)
+    {
         if (nums.size() == 3)
             return nums[0] * nums[1] * nums[2];
         vector<int> po, ne;
@@ -2750,6 +2751,33 @@ public:
         if (po_n == 2)
             result = max(result, po[0]*po[1]*ne[ne_n-1]);
         return result;
+    }
+
+    // problem 215
+    int findKthLargest(vector<int>& nums, int k)
+    {
+        int low = 0, high = nums.size() - 1, guard = 0;
+        k = k - 1;
+        while (low <= high) {
+            int i = low, j = high, guard = nums[i];
+            while (i < j) {
+                while (i < j && nums[j] <= guard) {
+                    j--;
+                }
+                nums[i] = nums[j];
+                while (i < j && nums[i] >= guard) {
+                    i++;
+                }
+                nums[j] = nums[i];
+            }
+            nums[i] = guard;
+            if (i == k)
+                return nums[i];
+            else if (i > k)
+                high = i-1;
+            else if (i < k)
+                low = i+1;
+        }
     }
 };
 

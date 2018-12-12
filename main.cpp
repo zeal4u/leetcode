@@ -6,6 +6,6 @@ int main() {
     Solution solution;
 
     vector<int> nums =  {0, 5, 9, -8, -1};
-    cout<<solution.maximumProduct(nums)<<endl;
+    cout<<solution.findKthLargest(nums, 5);
     return 0;
 }
