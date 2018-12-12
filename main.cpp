@@ -5,7 +5,7 @@
 int main() {
     Solution solution;
 
-    vector<int> nums = {1, 2, 3, 5};
-    cout<<solution.canPartition(nums)<<endl;
+    vector<int> nums =  {0, 5, 9, -8, -1};
+    cout<<solution.maximumProduct(nums)<<endl;
     return 0;
 }

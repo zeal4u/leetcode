@@ -2719,6 +2719,38 @@ public:
         }
         return dp[sum] > 0;
     }
+
+    // problem 628
+    typedef struct{
+        bool operator()(int a, int b) {
+            return abs(a) > abs(b);
+        }
+    }cmp628;
+
+    // problem 628
+    int maximumProduct(vector<int>& nums) {
+        if (nums.size() == 3)
+            return nums[0] * nums[1] * nums[2];
+        vector<int> po, ne;
+        for (int &n : nums) {
+            if (n >= 0)
+                po.push_back(n);
+            else
+                ne.push_back(n);
+        }
+        sort(po.begin(), po.end());
+        sort(ne.begin(), ne.end());
+        int result = INT32_MIN, po_n = po.size(), ne_n = ne.size();
+        if (po_n >= 3)
+           result = max(result, po[po_n-1]*po[po_n-2]*po[po_n-3]);
+        if (ne_n >=2 && po_n >= 1)
+            result = max(result, po[po_n-1]*ne[0]*ne[1]);
+        if (po_n == 0)
+            result = max(result, ne[ne_n-1]*ne[ne_n-2]*ne[ne_n-3]);
+        if (po_n == 2)
+            result = max(result, po[0]*po[1]*ne[ne_n-1]);
+        return result;
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H
