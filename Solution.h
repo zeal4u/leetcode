@@ -2269,15 +2269,15 @@ public:
     }
 
     // problem 167
-    vector<int> twoSum(vector<int>& numbers, int target) {
-        int i=0, j = numbers.size()-1;
-        while(i<j){
-            if(numbers[i]+numbers[j]>target) j--;
-            if(numbers[i]+numbers[j]<target) i++;
-            if(numbers[i]+numbers[j] == target) break;
-        }
-        return vector<int>({i+1,j+1});
-    }
+    //vector<int> twoSum(vector<int>& numbers, int target) {
+    //    int i=0, j = numbers.size()-1;
+    //    while(i<j){
+    //        if(numbers[i]+numbers[j]>target) j--;
+    //        if(numbers[i]+numbers[j]<target) i++;
+    //        if(numbers[i]+numbers[j] == target) break;
+    //    }
+    //    return vector<int>({i+1,j+1});
+    //}
 
     // problem 646
     struct cmp646{
@@ -2778,6 +2778,44 @@ public:
             else if (i < k)
                 low = i+1;
         }
+    }
+
+    // problem 1
+    vector<int> twoSum(vector<int>& nums, int target)
+    {
+        unordered_map<int, int> record;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (record.find(nums[i]) != record.end()) {
+                return {record[nums[i]], i};
+            } else
+                record[target - nums[i]] = i;
+        }
+    }
+
+    // problem 114
+    TreeNode* _flatten(TreeNode* head)
+    {
+        if (!(head->left || head->right)) {
+            return head;
+        }
+        TreeNode *tail = nullptr;
+        if (head->left) {
+            tail = _flatten(head->left);
+            tail->right = head->right;
+            head->right = head->left;
+            head->left = nullptr;
+        }
+        if (tail && tail->right) {
+            return _flatten(tail->right);
+        } else if (head->right) {
+            return _flatten(head->right);
+        }
+    }
+    // problem 114
+    void flatten(TreeNode* root)
+    {
+        if (root)
+            _flatten(root);
     }
 };
 
