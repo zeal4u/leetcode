@@ -2831,6 +2831,38 @@ public:
         }
         return dp[n];
     }
+
+    // problem 17
+    vector<string> letterCombinations(string digits) {
+        if (digits.length() == 0)
+            return vector<string>();
+        unordered_map<char, string> dictionary;
+        dictionary['2'] = "abc";
+        dictionary['3'] = "def";
+        dictionary['4'] = "ghi";
+        dictionary['5'] = "jkl";
+        dictionary['6'] = "mno";
+        dictionary['7'] = "pqrs";
+        dictionary['8'] = "tuv";
+        dictionary['9'] = "wxyz";
+        vector<string> *cur, *pre;
+        pre = new vector<string>(1,"");
+        for (char &c : digits) {
+            cur = new vector<string>();
+            for (string &p : *pre) {
+                if (dictionary.find(c) != dictionary.end())
+                    for (char &c1: dictionary[c]) {
+                        cur->push_back(p+c1);
+                    }
+                else
+                    cur->push_back(p);
+            }
+            vector<string> *temp = pre;
+            pre = cur;
+            delete temp;
+        }
+        return *cur;
+    }
 };
 
 #endif //LEETCODE_SOLUTION_H

@@ -6,7 +6,8 @@
 
 int main() {
     Solution solution;
-
-    cout<<solution.numSquares(3288);
+    auto res = solution.letterCombinations("2312");
+    for (auto &s :res)
+        cout<<s<<endl;
     return 0;
 }
