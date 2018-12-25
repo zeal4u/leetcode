@@ -32,16 +32,17 @@ using namespace std;
 
 
 struct ListNode {
-        int val;
-        ListNode *next;
+    int val;
+    ListNode *next;
 
-        ListNode(int x) : val(x), next(NULL) {}
+    ListNode(int x) : val(x), next(NULL) {}
 };
 
 
 class Solution {
 public:
-    Solution(){}
+    Solution() {}
+
     // problem 771
     int numJewelsInStones(string J, string S) {
         int result = 0;
@@ -1322,7 +1323,7 @@ public:
             if (S[i] >= '0' && S[i] <= '9')
                 continue;
             n = result.size();
-            for (int j=0;j<n;++j) {
+            for (int j = 0; j < n; ++j) {
                 string s = result[j];
                 if (s[i] >= 'a' && s[i] <= 'z') {
                     s[i] = s[i] - 'a' + 'A';
@@ -1336,12 +1337,12 @@ public:
     }
 
     // problem 812
-    double largestTriangleArea(vector<vector<int>>& points) {
+    double largestTriangleArea(vector<vector<int>> &points) {
         double res = 0;
-        for(auto &i:points)
-            for(auto &j:points)
-                for(auto &k:points)
-                    res = max(res, 0.5*(i[0]*(j[1]-k[1])+ j[0]*(k[1]-i[1])+k[0]*(i[1]-j[1])));
+        for (auto &i:points)
+            for (auto &j:points)
+                for (auto &k:points)
+                    res = max(res, 0.5 * (i[0] * (j[1] - k[1]) + j[0] * (k[1] - i[1]) + k[0] * (i[1] - j[1])));
         return res;
     }
 
@@ -1350,13 +1351,13 @@ public:
         int result = 0;
         stack<char> sk;
         bool flag = true;
-        for(char c:S){
-            if(c == '(') {
+        for (char c:S) {
+            if (c == '(') {
                 sk.push(c);
                 flag = true;
             } else {
-                if(flag)
-                    result += pow(2,sk.size()-1);
+                if (flag)
+                    result += pow(2, sk.size() - 1);
                 flag = false;
                 sk.pop();
             }
@@ -1365,11 +1366,11 @@ public:
     }
 
     // problem 695
-    int maxAreaOfIsland(vector<vector<int>>& grid) {
+    int maxAreaOfIsland(vector<vector<int>> &grid) {
         int result = 0, row = grid.size(), col = grid[0].size();
         vector<vector<bool>> flags(row, vector<bool>(col, false));
-        for(int i=0;i<row;++i){
-            for(int j=0;j<col;++j){
+        for (int i = 0; i < row; ++i) {
+            for (int j = 0; j < col; ++j) {
                 result = max(result, _explore_island(flags, grid, i, j));
             }
         }
@@ -1377,20 +1378,21 @@ public:
     }
 
     // problem 695
-    int _explore_island(vector<vector<bool>> &flag, vector<vector<int>> &grid, int i, int j){
-        if(i>=0 && i<grid.size() && j>=0 && j<grid[0].size() && !flag[i][j] && grid[i][j]){
+    int _explore_island(vector<vector<bool>> &flag, vector<vector<int>> &grid, int i, int j) {
+        if (i >= 0 && i < grid.size() && j >= 0 && j < grid[0].size() && !flag[i][j] && grid[i][j]) {
             flag[i][j] = true;
-            return 1+_explore_island(flag, grid, i-1,j)+_explore_island(flag, grid, i+1,j)+_explore_island(flag, grid, i, j-1)+_explore_island(flag, grid, i,j+1);
-        }else{
+            return 1 + _explore_island(flag, grid, i - 1, j) + _explore_island(flag, grid, i + 1, j) +
+                   _explore_island(flag, grid, i, j - 1) + _explore_island(flag, grid, i, j + 1);
+        } else {
             return 0;
         }
     }
 
     // problem 789
-    bool escapeGhosts(vector<vector<int>>& ghosts, vector<int>& target) {
+    bool escapeGhosts(vector<vector<int>> &ghosts, vector<int> &target) {
         int distance = abs(target[0]) + abs(target[1]);
-        for(vector<int> &g:ghosts){
-            if(distance >= abs(g[0]-target[0])+abs(g[1]-target[1])){
+        for (vector<int> &g:ghosts) {
+            if (distance >= abs(g[0] - target[0]) + abs(g[1] - target[1])) {
                 return false;
             }
         }
@@ -1398,8 +1400,8 @@ public:
     }
 
     // problem 451
-    struct lenCmp{
-        bool operator()(string i, string j){
+    struct lenCmp {
+        bool operator()(string i, string j) {
             return i.length() > j.length();
         }
     };
@@ -1407,43 +1409,43 @@ public:
     // problem 451
     string frequencySort(string s) {
         map<char, int> count;
-        for(char c:s){
+        for (char c:s) {
             count[c]++;
         }
         vector<string> re_s;
-        for(auto p:count){
+        for (auto p:count) {
             re_s.push_back(string(p.second, p.first));
         }
         struct lenCmp lenCmp1;
         sort(re_s.begin(), re_s.end(), lenCmp1);
         string result;
-        for(string str:re_s){
-            result+=str;
+        for (string str:re_s) {
+            result += str;
         }
         return result;
     }
 
     // problem 609
-    vector<vector<string>> findDuplicate(vector<string>& paths) {
+    vector<vector<string>> findDuplicate(vector<string> &paths) {
         int start, end, mark;
         map<string, vector<string>> record;
-        for(string p: paths){
+        for (string p: paths) {
             mark = p.find(' ');
-            string dir = p.substr(0, mark)+"/";
-            for(int i = mark+1;i<p.length();++i) {
-                if(p[i]==' ')
+            string dir = p.substr(0, mark) + "/";
+            for (int i = mark + 1; i < p.length(); ++i) {
+                if (p[i] == ' ')
                     mark = i;
-                else if(p[i]=='(')
+                else if (p[i] == '(')
                     start = i;
-                else if(p[i] == ')') {
+                else if (p[i] == ')') {
                     end = i;
-                    record[p.substr(start + 1, end - start - 1)].push_back(dir+p.substr(mark+1, start-mark-1));
+                    record[p.substr(start + 1, end - start - 1)].push_back(dir + p.substr(mark + 1, start - mark - 1));
                 }
             }
         }
         vector<vector<string>> result;
-        for(const auto &p: record){
-            if(p.second.size()!=1)
+        for (const auto &p: record) {
+            if (p.second.size() != 1)
                 result.push_back(p.second);
         }
         return result;
@@ -1451,14 +1453,14 @@ public:
 
     // problem 526
     void justTry(vector<bool> &flags, int N, int pos, int *count) {
-        if(pos > N) {
+        if (pos > N) {
             (*count)++;
             return;
         }
-        for(int i=1;i<=N;++i){
-            if(!flags[i] && (i%pos==0||pos%i==0)){
+        for (int i = 1; i <= N; ++i) {
+            if (!flags[i] && (i % pos == 0 || pos % i == 0)) {
                 flags[i] = true;
-                justTry(flags,N, pos+1, count);
+                justTry(flags, N, pos + 1, count);
                 flags[i] = false;
             }
         }
@@ -1466,37 +1468,37 @@ public:
 
     // problem 526
     int countArrangement(int N) {
-        if(N == 0) return 0;
-        int * count = new int(0), pos = 1;
-        vector<bool> flags(N+1, false);
+        if (N == 0) return 0;
+        int *count = new int(0), pos = 1;
+        vector<bool> flags(N + 1, false);
 
         justTry(flags, N, pos, count);
         return *count;
     }
 
     // problem 508
-    vector<int> findFrequentTreeSum(TreeNode* root) {
+    vector<int> findFrequentTreeSum(TreeNode *root) {
         map<int, int> sums;
 
         computeSum(root, sums);
 
         vector<int> result;
         int max_s = INT32_MIN;
-        for(auto &p : sums){
-            if(max_s < p.second)
+        for (auto &p : sums) {
+            if (max_s < p.second)
                 max_s = p.second;
         }
-        for(auto &p : sums){
-            if(max_s == p.second)
+        for (auto &p : sums) {
+            if (max_s == p.second)
                 result.push_back(p.first);
         }
         return result;
     }
 
     // problem 508
-    int computeSum(TreeNode *root, map<int, int> &sums){
+    int computeSum(TreeNode *root, map<int, int> &sums) {
         int result = 0;
-        if(root != nullptr){
+        if (root != nullptr) {
             result = root->val + computeSum(root->left, sums) + computeSum(root->right, sums);
             sums[result]++;
         }
@@ -1506,16 +1508,16 @@ public:
     // problem 712
     int minimumDeleteSum(string s1, string s2) {
         int l_s1 = s1.length(), l_s2 = s2.length();
-        vector<vector<int>> dp(l_s1+1, vector<int>(l_s2+1));
-        for(int j=1;j<=l_s2;++j)
-            dp[0][j] = dp[0][j-1] + s2[j-1];
-        for(int i=1;i<=l_s1;++i){
-            dp[i][0] = dp[i-1][0] + s1[i-1];
-            for(int j = 1;j<=l_s2;++j){
-                if(s1[i-1] == s2[j-1]){
-                    dp[i][j] = dp[i-1][j-1];
-                }else{
-                    dp[i][j] = min(dp[i-1][j] + s1[i-1], dp[i][j-1] + s2[j-1]);
+        vector<vector<int>> dp(l_s1 + 1, vector<int>(l_s2 + 1));
+        for (int j = 1; j <= l_s2; ++j)
+            dp[0][j] = dp[0][j - 1] + s2[j - 1];
+        for (int i = 1; i <= l_s1; ++i) {
+            dp[i][0] = dp[i - 1][0] + s1[i - 1];
+            for (int j = 1; j <= l_s2; ++j) {
+                if (s1[i - 1] == s2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = min(dp[i - 1][j] + s1[i - 1], dp[i][j - 1] + s2[j - 1]);
                 }
             }
         }
@@ -1523,37 +1525,37 @@ public:
     }
 
     // problem 865
-    pair<int, TreeNode*> deep(TreeNode *pNode) {
-        if(pNode== nullptr)
+    pair<int, TreeNode *> deep(TreeNode *pNode) {
+        if (pNode == nullptr)
             return {0, nullptr};
-        pair<int, TreeNode*> l = deep(pNode->left), r = deep(pNode->right);
+        pair<int, TreeNode *> l = deep(pNode->left), r = deep(pNode->right);
         int d1 = l.first, d2 = r.first;
-        return {max(d1, d2)+1, d1==d2?pNode:d1>d2?l.second:r.second};
+        return {max(d1, d2) + 1, d1 == d2 ? pNode : d1 > d2 ? l.second : r.second};
     }
 
     // problem 865
-    TreeNode* subtreeWithAllDeepest(TreeNode* root) {
+    TreeNode *subtreeWithAllDeepest(TreeNode *root) {
         return deep(root).second;
     }
 
     // problem 389, char is same as number
     char findTheDifference(string s, string t) {
         char x = 0;
-        for(char &c:s){
+        for (char &c:s) {
             x ^= c;
         }
-        for(char &c:t){
+        for (char &c:t) {
             x ^= c;
         }
         return x;
     }
 
     // problem 462
-    int minMoves2(vector<int>& nums) {
-        nth_element(nums.begin(), nums.begin()+nums.size()/2, nums.end());
-        int result = 0,mid = nums[nums.size()/2];
-        for(int i:nums){
-            result += abs(nums[i]-mid);
+    int minMoves2(vector<int> &nums) {
+        nth_element(nums.begin(), nums.begin() + nums.size() / 2, nums.end());
+        int result = 0, mid = nums[nums.size() / 2];
+        for (int i:nums) {
+            result += abs(nums[i] - mid);
         }
         return result;
     }
@@ -1561,11 +1563,11 @@ public:
     // problem 696
     int countBinarySubstrings(string s) {
         int result = 0;
-        int pre=0,count = 1;
-        for(int i=1;i<s.length();++i){
-            if(s[i] == s[i-1]){
+        int pre = 0, count = 1;
+        for (int i = 1; i < s.length(); ++i) {
+            if (s[i] == s[i - 1]) {
                 count++;
-            }else{
+            } else {
                 result += min(count, pre);
                 pre = count;
                 count = 1;
@@ -1575,35 +1577,37 @@ public:
     }
 
     // problem 653
-    bool findTargetDFS(set<int> &s, TreeNode *root, int k){
-        if(!root)
+    bool findTargetDFS(set<int> &s, TreeNode *root, int k) {
+        if (!root)
             return false;
-        if(s.count(k-root->val)) return true;
+        if (s.count(k - root->val)) return true;
 
         s.insert(root->val);
         return findTargetDFS(s, root->left, k) || findTargetDFS(s, root->right, k);
     }
+
     // problem 653
-    bool findTarget(TreeNode* root, int k) {
+    bool findTarget(TreeNode *root, int k) {
         set<int> s;
         return findTargetDFS(s, root, k);
     }
 
     // problem 547
-    void searchFriendCircle(vector<bool> &flags,vector<vector<int>> &M,int cur){
+    void searchFriendCircle(vector<bool> &flags, vector<vector<int>> &M, int cur) {
         flags[cur] = true;
-        for(int i=0;i<flags.size();++i){
-            if(!flags[i] && M[cur][i]){
+        for (int i = 0; i < flags.size(); ++i) {
+            if (!flags[i] && M[cur][i]) {
                 searchFriendCircle(flags, M, i);
             }
         }
     }
+
     // problem 547
-    int findCircleNum(vector<vector<int>>& M) {
+    int findCircleNum(vector<vector<int>> &M) {
         int n = M.size(), count = 0, cur = 0;
         vector<bool> flags(n, false);
-        for(int i = 0;i<n;++i) {
-            for(int j = 0;j<n;++j) {
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (!flags[i] && M[i][j]) {
                     count++;
                     searchFriendCircle(flags, M, i);
@@ -1614,52 +1618,52 @@ public:
     }
 
     // problem 565
-    int arrayNesting(vector<int>& nums) {
+    int arrayNesting(vector<int> &nums) {
         int n = nums.size(), result = 0;
         vector<bool> flags(n, false);
-        int cur = 0, count= 0;
-        for(int i=0;i<n;++i){
+        int cur = 0, count = 0;
+        for (int i = 0; i < n; ++i) {
             cur = i;
             count = 0;
-            while(!flags[cur]){
+            while (!flags[cur]) {
                 count++;
                 flags[cur] = true;
                 cur = nums[cur];
             }
-            if(result < count)
+            if (result < count)
                 result = count;
         }
         return result;
     }
 
     // problem 860
-    bool lemonadeChange(vector<int>& bills) {
+    bool lemonadeChange(vector<int> &bills) {
         map<int, int> what_i_got;
         int change = 0;
-        for(int i:bills){
+        for (int i:bills) {
             change = i - 5;
-            if(change == 15){
-                if(what_i_got[10]>0 && what_i_got[5]>0) {
+            if (change == 15) {
+                if (what_i_got[10] > 0 && what_i_got[5] > 0) {
                     what_i_got[10]--;
                     what_i_got[5]--;
                     change = 0;
-                }else if(what_i_got[5]>2){
+                } else if (what_i_got[5] > 2) {
                     what_i_got[5] -= 3;
                     change = 0;
                 }
-            }else if(change == 10){
-                if(what_i_got[10]>0) {
+            } else if (change == 10) {
+                if (what_i_got[10] > 0) {
                     what_i_got[10]--;
                     change = 0;
-                }else if(what_i_got[5] > 1){
-                    what_i_got[5]-=2;
+                } else if (what_i_got[5] > 1) {
+                    what_i_got[5] -= 2;
                     change = 0;
                 }
-            }else if(change == 5 && what_i_got[5]>0) {
+            } else if (change == 5 && what_i_got[5] > 0) {
                 what_i_got[5]--;
                 change = 0;
             }
-            if(change==0)
+            if (change == 0)
                 what_i_got[i]++;
             else
                 return false;
@@ -1668,10 +1672,10 @@ public:
     }
 
     // problem 421 TODO: Hard to understand the best resolution.
-    int findMaximumXOR(vector<int>& nums) {
+    int findMaximumXOR(vector<int> &nums) {
         int max = 0, n = nums.size(), tmp = 0;
-        if(n > 999)
-            return  2147483644;
+        if (n > 999)
+            return 2147483644;
         for (int i = 0; i < n; ++i) {
             for (int j = i + 1; j < n; ++j) {
                 tmp = nums[i] ^ nums[j];
@@ -1683,45 +1687,45 @@ public:
     }
 
     // problem 648
-    string replaceWords(vector<string>& dict, string sentence) {
+    string replaceWords(vector<string> &dict, string sentence) {
         vector<string> data;
         int n = sentence.length();
         int start = 0;
-        for(int i=0;i<n;++i){
-            if(sentence[i]==' '){
-                data.push_back(sentence.substr(start, i-start));
-                start = i+1;
+        for (int i = 0; i < n; ++i) {
+            if (sentence[i] == ' ') {
+                data.push_back(sentence.substr(start, i - start));
+                start = i + 1;
             }
         }
-        data.push_back(sentence.substr(start, n-start));
+        data.push_back(sentence.substr(start, n - start));
 
         string result = "";
-        for(string &w:data){
-            for(string &d:dict){
+        for (string &w:data) {
+            for (string &d:dict) {
                 int i = 0, len = d.size();
-                for(;i<len;++i){
-                    if(w[i]!=d[i]){
+                for (; i < len; ++i) {
+                    if (w[i] != d[i]) {
                         break;
                     }
                 }
-                if(i == len){
+                if (i == len) {
                     w = d;
                 }
             }
             result += w + " ";
         }
-        result = result.substr(0, result.size()-1);
+        result = result.substr(0, result.size() - 1);
         return result;
     }
 
     // problem 769
-    int maxChunksToSorted(vector<int>& arr) {
-        if(arr.empty())
+    int maxChunksToSorted(vector<int> &arr) {
+        if (arr.empty())
             return 0;
         int count = 0, max_n = 0;
-        for(int i=0;i<arr.size();++i){
+        for (int i = 0; i < arr.size(); ++i) {
             max_n = max(max_n, arr[i]);
-            if(max_n == i)
+            if (max_n == i)
                 count++;
         }
         return count;
@@ -1729,18 +1733,19 @@ public:
 
     // problem 216
     void combination(vector<int> &com, vector<vector<int>> &result, int k, int n, int start) {
-        if(!k && !n){
+        if (!k && !n) {
             result.push_back(com);
-        }else{
-            for(int i=start;i<10;++i){
-                if(i<=n){
+        } else {
+            for (int i = start; i < 10; ++i) {
+                if (i <= n) {
                     com.push_back(i);
-                    combination(com, result, k-1, n-i, i+1);
+                    combination(com, result, k - 1, n - i, i + 1);
                     com.pop_back();
                 }
             }
         }
     }
+
     // problem 216
     vector<vector<int>> combinationSum3(int k, int n) {
         vector<vector<int>> result;
@@ -1750,43 +1755,43 @@ public:
     }
 
     // problem 538
-    void travel(TreeNode *root, int * sum){
-        if(!root)
+    void travel(TreeNode *root, int *sum) {
+        if (!root)
             return;
-        if(root->right) travel(root->right, sum);
+        if (root->right) travel(root->right, sum);
         root->val = (*sum += root->val);
-        if(root->left) travel(root->left, sum);
+        if (root->left) travel(root->left, sum);
     }
 
     // problem 538
-    TreeNode* convertBST(TreeNode* root) {
-        int * sum  = new int(0);
+    TreeNode *convertBST(TreeNode *root) {
+        int *sum = new int(0);
         travel(root, sum);
         return root;
     }
 
     // problem 796
     bool rotateString(string A, string B) {
-        if(A.empty() && B.empty())
+        if (A.empty() && B.empty())
             return true;
-        if(A.length() != B.length())
+        if (A.length() != B.length())
             return false;
         int n = A.length(), count = 0;
-        for(int i=0;i<n;++i){
-            if(A[i] == B[count]){
+        for (int i = 0; i < n; ++i) {
+            if (A[i] == B[count]) {
                 count++;
-            }else if(count){
+            } else if (count) {
                 i--;
                 count = 0;
             }
         }
-        if(count == 0)
+        if (count == 0)
             return false;
 
-        for(int i = 0;i<n-count;++i){
-            if(A[i] == B[count]){
+        for (int i = 0; i < n - count; ++i) {
+            if (A[i] == B[count]) {
                 count++;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -1794,10 +1799,10 @@ public:
     }
 
     // problem 503
-    vector<int> nextGreaterElements(vector<int>& nums) {
+    vector<int> nextGreaterElements(vector<int> &nums) {
         int n = nums.size(), count = 0, max = INT32_MIN, index = 0, tmp;
-        for(int i = 0;i<n;++i){
-            if(max < nums[i]){
+        for (int i = 0; i < n; ++i) {
+            if (max < nums[i]) {
                 index = i;
                 max = nums[i];
             }
@@ -1805,12 +1810,12 @@ public:
 
         stack<int> stk;
         vector<int> result(n, -1);
-        for(int i = index;(i+n)>=index+1;--i){
-            tmp = (i+n)%n;
-            while(!stk.empty() && stk.top() <= nums[tmp]){
+        for (int i = index; (i + n) >= index + 1; --i) {
+            tmp = (i + n) % n;
+            while (!stk.empty() && stk.top() <= nums[tmp]) {
                 stk.pop();
             }
-            if(!stk.empty()){
+            if (!stk.empty()) {
                 result[tmp] = stk.top();
             }
             stk.push(nums[tmp]);
@@ -1819,22 +1824,22 @@ public:
     }
 
     // problem 783
-    void _minDiffBST(TreeNode* root,int *m, stack<int> &s){
-        if(!root)
+    void _minDiffBST(TreeNode *root, int *m, stack<int> &s) {
+        if (!root)
             return;
-        if(root->right){
+        if (root->right) {
             _minDiffBST(root->right, m, s);
         }
-        if(!s.empty() && *m > s.top()-root->val){
+        if (!s.empty() && *m > s.top() - root->val) {
             *m = s.top() - root->val;
         }
         s.push(root->val);
-        if(root->left)
-            _minDiffBST(root->left,m,s);
+        if (root->left)
+            _minDiffBST(root->left, m, s);
     }
 
     // problem 783
-    int minDiffInBST(TreeNode* root) {
+    int minDiffInBST(TreeNode *root) {
         int *result = new int(INT32_MAX);
         stack<int> bigger;
         _minDiffBST(root, result, bigger);
@@ -1842,7 +1847,7 @@ public:
     }
 
     // problem 530
-    int getMinimumDifference(TreeNode* root) {
+    int getMinimumDifference(TreeNode *root) {
         int *result = new int(INT32_MAX);
         stack<int> bigger;
         _minDiffBST(root, result, bigger);
@@ -1851,34 +1856,34 @@ public:
 
     // problem 383
     bool canConstruct(string ransomNote, string magazine) {
-        int dict[26]={0};
-        for(char &c:magazine){
-            dict[c-'a']++;
+        int dict[26] = {0};
+        for (char &c:magazine) {
+            dict[c - 'a']++;
         }
-        for(char &c:ransomNote){
-            dict[c-'a']--;
+        for (char &c:ransomNote) {
+            dict[c - 'a']--;
         }
-        for(auto &p:dict){
-            if(p < 0)
+        for (auto &p:dict) {
+            if (p < 0)
                 return false;
         }
         return true;
     }
 
     // problem 454
-    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+    int fourSumCount(vector<int> &A, vector<int> &B, vector<int> &C, vector<int> &D) {
         int count = 0, sum = 0, n = A.size();
         unordered_map<int, int> record;
-        for(int i=0; i<n;++i){
-            for(int j=0;j<n;++j){
-                sum = A[i]+B[j];
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                sum = A[i] + B[j];
                 record[sum]++;
             }
         }
 
-        for(int i=0; i<n;++i){
-            for(int j=0;j<n;++j){
-                sum = C[i]+D[j];
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                sum = C[i] + D[j];
                 count += record[-sum];
             }
         }
@@ -1887,31 +1892,31 @@ public:
 
     // problem 733
     void replaceColor(vector<vector<int>> &image, int sr, int sc, int oldColor, int newColor) {
-        if(sr>=0 && sc>=0 && sr<image.size() && sc<image[0].size() && image[sr][sc]==oldColor){
+        if (sr >= 0 && sc >= 0 && sr < image.size() && sc < image[0].size() && image[sr][sc] == oldColor) {
             image[sr][sc] = newColor;
-            replaceColor(image, sr-1, sc, oldColor, newColor);
-            replaceColor(image, sr+1, sc, oldColor, newColor);
-            replaceColor(image, sr, sc-1, oldColor, newColor);
-            replaceColor(image, sr, sc+1, oldColor, newColor);
+            replaceColor(image, sr - 1, sc, oldColor, newColor);
+            replaceColor(image, sr + 1, sc, oldColor, newColor);
+            replaceColor(image, sr, sc - 1, oldColor, newColor);
+            replaceColor(image, sr, sc + 1, oldColor, newColor);
         }
     }
 
     // problem 733
-    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+    vector<vector<int>> floodFill(vector<vector<int>> &image, int sr, int sc, int newColor) {
         int oldColor = image[sr][sc];
-        if(newColor != oldColor)
+        if (newColor != oldColor)
             replaceColor(image, sr, sc, oldColor, newColor);
         return image;
     }
 
     // 78
-    vector<vector<int>> subsets(vector<int>& nums) {
+    vector<vector<int>> subsets(vector<int> &nums) {
         vector<vector<int>> result;
         int n;
         result.emplace_back();
-        for(int &each:nums){
+        for (int &each:nums) {
             n = result.size();
-            for(int i=0;i<n;++i){
+            for (int i = 0; i < n; ++i) {
                 vector<int> newSub = result[i];
                 newSub.push_back(each);
                 result.push_back(newSub);
@@ -1922,29 +1927,29 @@ public:
 
     // problem 404
     int _sumOfLeftLeaves(TreeNode *parent, TreeNode *child) {
-        if(child) {
-            if(!(child->left||child->right) && parent->left == child){
+        if (child) {
+            if (!(child->left || child->right) && parent->left == child) {
                 return child->val;
-            }else{
-                return _sumOfLeftLeaves(child, child->left)+_sumOfLeftLeaves(child, child->right);
+            } else {
+                return _sumOfLeftLeaves(child, child->left) + _sumOfLeftLeaves(child, child->right);
             }
-        }else
+        } else
             return 0;
     }
 
     // problem 404
-    int sumOfLeftLeaves(TreeNode* root) {
-        if(root)
+    int sumOfLeftLeaves(TreeNode *root) {
+        if (root)
             return _sumOfLeftLeaves(root, root->left) + _sumOfLeftLeaves(root, root->right);
         else
             return 0;
     }
 
     // problem 869
-    long countDigit(int N){
+    long countDigit(int N) {
         long result = 0;
-        for(;N>0;N/=10){
-            result += pow(10, N%10);
+        for (; N > 0; N /= 10) {
+            result += pow(10, N % 10);
         }
         return result;
     }
@@ -1952,22 +1957,22 @@ public:
     // problem 869
     bool reorderedPowerOf2(int N) {
         long c = countDigit(N);
-        for(int i = 0;i<32;++i){
-            if(c == countDigit(1<<i)) return true;
+        for (int i = 0; i < 32; ++i) {
+            if (c == countDigit(1 << i)) return true;
         }
         return false;
     }
 
     // problem 445
-    ListNode* reverseList(ListNode *pNode) {
-        if(!pNode || !pNode->next){
+    ListNode *reverseList(ListNode *pNode) {
+        if (!pNode || !pNode->next) {
             return pNode;
         }
         ListNode *pre = pNode;
         ListNode *cur = pNode->next;
         pre->next = nullptr;
         ListNode *next;
-        while(cur){
+        while (cur) {
             next = cur->next;
             cur->next = pre;
             pre = cur;
@@ -2013,7 +2018,7 @@ public:
     }
 
     // problem 445
-    ListNode* addTwoNumbersII(ListNode* l1, ListNode* l2) {
+    ListNode *addTwoNumbersII(ListNode *l1, ListNode *l2) {
         ListNode *p1 = l1, *p2 = l2;
         int count = 0;
         l1 = reverseList(l1);
@@ -2022,45 +2027,45 @@ public:
     }
 
     // problem 773
-    int _computeId(vector<vector<int>> &board){
+    int _computeId(vector<vector<int>> &board) {
         int id = 0, digit = 100000;
-        for(int i = 0;i<6;i++){
-            id += board[i/3][i%3] * digit;
+        for (int i = 0; i < 6; i++) {
+            id += board[i / 3][i % 3] * digit;
             digit /= 10;
         }
         return id;
     }
 
     // problem 773
-    int slidingPuzzle(vector<vector<int>>& board) {
+    int slidingPuzzle(vector<vector<int>> &board) {
         int id = _computeId(board);
         unordered_set<string> records;
         queue<string> q;
         string id_s = to_string(id);
-        if(id < 100000){
-            id_s = "0"+id_s;
+        if (id < 100000) {
+            id_s = "0" + id_s;
         }
         records.insert(id_s);
         q.push(id_s);
         int result = 0, index;
-        int dire[4] = {1,-1,3,-3};
-        string str, str_cp, target="123450";
-        while(!q.empty()){
-            for(int sz = q.size(); sz > 0;--sz){
+        int dire[4] = {1, -1, 3, -3};
+        string str, str_cp, target = "123450";
+        while (!q.empty()) {
+            for (int sz = q.size(); sz > 0; --sz) {
                 str = q.front();
                 q.pop();
-                if(str == target) return result;
+                if (str == target) return result;
                 index = str.find('0');
-                for(int k=0;k<4;++k){
-                    int j = index+dire[k];
-                    if(j<0 || j>5 || index==2 && j==3 || index==3 && j==2 ) continue;
+                for (int k = 0; k < 4; ++k) {
+                    int j = index + dire[k];
+                    if (j < 0 || j > 5 || index == 2 && j == 3 || index == 3 && j == 2) continue;
 
                     str_cp = str;
-                    char tmp  = str_cp[index];
+                    char tmp = str_cp[index];
                     str_cp[index] = str_cp[j];
                     str_cp[j] = tmp;
 
-                    if(!records.count(str_cp)) {
+                    if (!records.count(str_cp)) {
                         records.insert(str_cp);
                         q.push(str_cp);
                     }
@@ -2072,40 +2077,40 @@ public:
     }
 
     // problem 697
-    int findShortestSubArray(vector<int>& nums) {
+    int findShortestSubArray(vector<int> &nums) {
         int degree = 0, result = nums.size(), tmp;
 
         unordered_map<int, int> count;
-        unordered_map<int, int>  start;
-        for(int i=0;i<nums.size();++i){
+        unordered_map<int, int> start;
+        for (int i = 0; i < nums.size(); ++i) {
             count[nums[i]]++;
 
-            if(degree < count[nums[i]]){
+            if (degree < count[nums[i]]) {
                 // update result
                 degree = count[nums[i]];
-                result = start.count(nums[i])? i - start[nums[i]] + 1:1;
-            }else if (degree ==  count[nums[i]]){
+                result = start.count(nums[i]) ? i - start[nums[i]] + 1 : 1;
+            } else if (degree == count[nums[i]]) {
                 // choose smaller result
-                tmp = start.count(nums[i])? i - start[nums[i]] + 1:1;
+                tmp = start.count(nums[i]) ? i - start[nums[i]] + 1 : 1;
                 result = min(result, tmp);
             }
 
-            if(!start.count(nums[i]))
+            if (!start.count(nums[i]))
                 start[nums[i]] = i;
         }
         return result;
     }
 
     // problem 455
-    int findContentChildren(vector<int>& g, vector<int>& s) {
+    int findContentChildren(vector<int> &g, vector<int> &s) {
         int result = 0;
 
-        sort(g.begin(),g.end());
-        sort(s.begin(),s.end());
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
 
-        int i = 0, j=0;
-        while(i < g.size() && j < s.size()){
-            if(g[i] <= s[j]){
+        int i = 0, j = 0;
+        while (i < g.size() && j < s.size()) {
+            if (g[i] <= s[j]) {
                 result++;
                 i++;
             }
@@ -2114,36 +2119,37 @@ public:
         return result;
     }
 
-    vector<ListNode*> splitListToParts(ListNode* root, int k) {
-        ListNode * pNode = root;
+    vector<ListNode *> splitListToParts(ListNode *root, int k) {
+        ListNode *pNode = root;
         int size = 0;
-        while(pNode){
+        while (pNode) {
             size++;
             pNode = pNode->next;
         }
-        int part_len = size/k, addition = size % k;
-        vector<ListNode*> result;
-        pNode  = root;
+        int part_len = size / k, addition = size % k;
+        vector<ListNode *> result;
+        pNode = root;
 
         size = 0;
-        ListNode * start_p = root;
+        ListNode *start_p = root;
         int tmp;
-        while(pNode){
+        while (pNode) {
             size++;
             tmp = result.size();
-            tmp =tmp >=addition? addition * (1 + part_len) + (tmp + 1 - addition) * part_len : (tmp+1)*(part_len+1);
-            if(size == tmp){
+            tmp = tmp >= addition ? addition * (1 + part_len) + (tmp + 1 - addition) * part_len : (tmp + 1) *
+                                                                                                  (part_len + 1);
+            if (size == tmp) {
                 result.push_back(start_p);
                 start_p = pNode;
                 pNode = pNode->next;
                 start_p->next = nullptr;
                 start_p = pNode;
-            }else{
+            } else {
                 pNode = pNode->next;
             }
         }
         k -= size;
-        while(k>0){
+        while (k > 0) {
             result.push_back(nullptr);
             k--;
         }
@@ -2152,10 +2158,10 @@ public:
 
     // problem 378
     // modified quick sort
-    int kthSmallest(vector<vector<int>>& matrix, int k) {
-        int n = matrix.size(), low = matrix[0][0], high = matrix[n-1][n-1], mid = 0;
+    int kthSmallest(vector<vector<int>> &matrix, int k) {
+        int n = matrix.size(), low = matrix[0][0], high = matrix[n - 1][n - 1], mid = 0;
 
-        while(low < high) {
+        while (low < high) {
             mid = low + (high - low) / 2;
             int count = 0, j = n - 1;
             for (int i = 0; i < n; ++i) {
@@ -2170,66 +2176,65 @@ public:
     }
 
     // problem 539
-    int _computeDiff(string a, string b){
+    int _computeDiff(string a, string b) {
         int ah = stoi(a.substr(0, 2));
         int bh = stoi(b.substr(0, 2));
         int am = stoi(a.substr(3, 2));
         int bm = stoi(b.substr(3, 2));
-        return am - bm + 60*(ah-bh);
+        return am - bm + 60 * (ah - bh);
     }
 
     // problem 539
-    int findMinDifference(vector<string>& timePoints) {
+    int findMinDifference(vector<string> &timePoints) {
         int n = timePoints.size();
         sort(timePoints.begin(), timePoints.end());
         int mindiff = INT32_MAX;
-        for(int i=0;i<n;i++){
-            int diff = abs(_computeDiff(timePoints[(i-1+n)%n], timePoints[i]));
-            diff = min(diff, 1440-diff);
+        for (int i = 0; i < n; i++) {
+            int diff = abs(_computeDiff(timePoints[(i - 1 + n) % n], timePoints[i]));
+            diff = min(diff, 1440 - diff);
             mindiff = min(mindiff, diff);
         }
         return mindiff;
     }
 
     // problem 684
-    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+    vector<int> findRedundantConnection(vector<vector<int>> &edges) {
         vector<unordered_set<int>> record;
         vector<int> result;
-        for(auto &edge:edges){
+        for (auto &edge:edges) {
             bool no_set = true, combined = false;
             vector<unordered_set<int>>::iterator one = record.end();
-            for(auto vertices = record.begin(); vertices!=record.end();vertices++) {
-                if(vertices->count(edge[0])&&vertices->count(edge[1])){
+            for (auto vertices = record.begin(); vertices != record.end(); vertices++) {
+                if (vertices->count(edge[0]) && vertices->count(edge[1])) {
                     no_set = false;
                     result = edge;
                     break;
-                }
-                else if(vertices->count(edge[0])){
+                } else if (vertices->count(edge[0])) {
                     vertices->insert(edge[1]);
                     no_set = false;
-                    if(one!= record.end()){
-                        vertices->insert(one->begin(),one->end());
+                    if (one != record.end()) {
+                        vertices->insert(one->begin(), one->end());
                         combined = true;
                         break;
-                    } else{
+                    } else {
                         one = vertices;
                     }
-                }else if(vertices->count(edge[1])){
+                } else if (vertices->count(edge[1])) {
                     vertices->insert(edge[0]);
                     no_set = false;
-                    if(one!= record.end()){
-                        vertices->insert(one->begin(),one->end());
+                    if (one != record.end()) {
+                        vertices->insert(one->begin(), one->end());
                         combined = true;
                         break;
-                    } else{
+                    } else {
                         one = vertices;
                     }
                 }
             }
-            if(no_set){
+            if (no_set) {
                 record.push_back(unordered_set<int>({edge[0], edge[1]}));
             }
-            if(combined){
+            if (combined) {
                 record.erase(one);
             }
         }
@@ -2237,33 +2242,33 @@ public:
     }
 
 
-    ListNode* head;
+    ListNode *head;
     // problem 382
     /** @param head The linked list's head.
     Note that the head is guaranteed to be not null, so it contains at least one node. */
-    Solution(ListNode* head):head(head) {
+    Solution(ListNode *head) : head(head) {
     }
 
     /** Returns a random node's value. */
     int getRandom() {
-        ListNode* p = head;
+        ListNode *p = head;
         int result = head->val;
-        for(int i=1;p->next!=nullptr;++i){
+        for (int i = 1; p->next != nullptr; ++i) {
             p = p->next;
-            if(rand()%(i+1) == i) result = p->val;
+            if (rand() % (i + 1) == i) result = p->val;
         }
         return result;
     }
 
     // problem 477
-    int totalHammingDistance(vector<int>& nums) {
+    int totalHammingDistance(vector<int> &nums) {
         int count = 0, one = 0, size = nums.size();
-        for(int i=0;i<32;++i){
+        for (int i = 0; i < 32; ++i) {
             one = 0;
-            for(int &n:nums){
-                if(((n >> i)&1) == 1) one++;
+            for (int &n:nums) {
+                if (((n >> i) & 1) == 1) one++;
             }
-            count += one *(size-one);
+            count += one * (size - one);
         }
         return count;
     }
@@ -2280,19 +2285,19 @@ public:
     //}
 
     // problem 646
-    struct cmp646{
+    struct cmp646 {
         bool operator()(vector<int> i, vector<int> j) {
             return i[1] < j[1];
         }
     };
 
     // problem 646
-    int findLongestChain(vector<vector<int>>& pairs) {
+    int findLongestChain(vector<vector<int>> &pairs) {
         struct cmp646 cmp;
         sort(pairs.begin(), pairs.end(), cmp);
         int result = 0, cur_tail = INT32_MIN;
-        for(auto &p :pairs){
-            if(p[0]>cur_tail){
+        for (auto &p :pairs) {
+            if (p[0] > cur_tail) {
                 result++;
                 cur_tail = p[1];
             }
@@ -2301,26 +2306,26 @@ public:
     }
 
     // problem 55
-    bool canJump(vector<int>& nums) {
-        if(nums.size()==0)
+    bool canJump(vector<int> &nums) {
+        if (nums.size() == 0)
             return false;
         int max_range = nums[0], n = nums.size();
-        for(int i = 0;i<=max_range;++i){
-            if(max_range < i + nums[i]) max_range = i+nums[i];
-            if(max_range >= n-1) return true;
+        for (int i = 0; i <= max_range; ++i) {
+            if (max_range < i + nums[i]) max_range = i + nums[i];
+            if (max_range >= n - 1) return true;
         }
         return false;
     }
 
     // problem 554
-    int leastBricks(vector<vector<int>>& wall) {
-        if(wall.empty())
+    int leastBricks(vector<vector<int>> &wall) {
+        if (wall.empty())
             return 0;
         int width = accumulate(wall[0].begin(), wall[0].end(), 0), height = wall.size(), least = height;
         vector<vector<int>> dp(height, vector<int>());
         unordered_map<int, int> count;
-        for(int i=0;i<height;++i){
-            for(int j=0;j<wall[i].size() - 1; ++j) {
+        for (int i = 0; i < height; ++i) {
+            for (int j = 0; j < wall[i].size() - 1; ++j) {
                 if (j) {
                     dp[i].push_back(dp[i][j - 1] + wall[i][j]);
                 } else
@@ -2328,8 +2333,8 @@ public:
                 count[dp[i].back()]++;
             }
         }
-        for(auto &p:count){
-            if(height - p.second < least)
+        for (auto &p:count) {
+            if (height - p.second < least)
                 least = height - p.second;
         }
 
@@ -2337,16 +2342,16 @@ public:
     }
 
     // problem 599
-    vector<string> findRestaurant(vector<string>& list1, vector<string>& list2) {
+    vector<string> findRestaurant(vector<string> &list1, vector<string> &list2) {
         vector<string> result;
 
         map<string, int> record;
         int minSum = INT32_MAX;
-        for(int i=0;i<list1.size();++i) record[list1[i]] = i;
-        for(int i=0;i<list2.size();++i){
-            if(record.count(list2[i]) && record[list2[i]] + i <= minSum){
+        for (int i = 0; i < list1.size(); ++i) record[list1[i]] = i;
+        for (int i = 0; i < list2.size(); ++i) {
+            if (record.count(list2[i]) && record[list2[i]] + i <= minSum) {
                 int tmp = record[list2[i]] + i;
-                if(tmp < minSum){
+                if (tmp < minSum) {
                     minSum = tmp;
                     result.clear();
                 }
@@ -2358,17 +2363,16 @@ public:
     }
 
     // problem 623 pending
-    TreeNode* addOneRow(TreeNode* root, int v, int d)
-    {
+    TreeNode *addOneRow(TreeNode *root, int v, int d) {
         if (d < 1)
             return nullptr;
         if (d == 1) {
-            TreeNode *new_root =  new TreeNode(v);
+            TreeNode *new_root = new TreeNode(v);
             new_root->left = root;
             return new_root;
         }
         vector<TreeNode *> cur_level = {move(root)}, nex_level;
-        while(--d > 1 & !cur_level.empty()){
+        while (--d > 1 & !cur_level.empty()) {
             nex_level.clear();
             for (auto &node: cur_level) {
                 if (node->left)
@@ -2380,7 +2384,7 @@ public:
         }
         for (auto node: cur_level) {
             TreeNode *new_left = new TreeNode(v);
-            new_left ->left = node->left;
+            new_left->left = node->left;
             node->left = new_left;
 
             TreeNode *new_right = new TreeNode(v);
@@ -2391,8 +2395,7 @@ public:
     }
 
     // problem 846
-    bool isNStraightHand(vector<int>& hand, int W)
-    {
+    bool isNStraightHand(vector<int> &hand, int W) {
         if (hand.size() % W != 0 && hand.size() / W == W)
             return false;
         sort(hand.begin(), hand.end());
@@ -2416,13 +2419,12 @@ public:
     }
 
     // problem 830
-    vector<vector<int>> largeGroupPositions(string S)
-    {
+    vector<vector<int>> largeGroupPositions(string S) {
         vector<vector<int>> result;
         int start = 0;
-        for (int i = 1;i < S.length(); ++i) {
-            if (S[i] != S[i-1]){
-                if (i - start >= 3){
+        for (int i = 1; i < S.length(); ++i) {
+            if (S[i] != S[i - 1]) {
+                if (i - start >= 3) {
                     result.push_back({start, i - 1});
                 }
                 start = i;
@@ -2436,26 +2438,24 @@ public:
     }
 
     // problem 746
-    int minCostClimbingStairs(vector<int>& cost)
-    {
-        vector<int> dp(cost.size()+1, 0);
+    int minCostClimbingStairs(vector<int> &cost) {
+        vector<int> dp(cost.size() + 1, 0);
 
         int n = cost.size();
         for (int i = 3; i <= n; i++) {
-            dp[i] = min(dp[i-1] + cost[i-2], dp[i-2]+cost[i-3]);
+            dp[i] = min(dp[i - 1] + cost[i - 2], dp[i - 2] + cost[i - 3]);
         }
-        return min(dp[n] + cost[n-1], dp[n-1] + cost[n-2]);
+        return min(dp[n] + cost[n - 1], dp[n - 1] + cost[n - 2]);
     }
 
     typedef struct {
-        bool operator() (string a, string b)
-        {
+        bool operator()(string a, string b) {
             return a.length() < b.length();
         }
-    }cmp_820;
+    } cmp_820;
+
     // problem 820
-    int minimumLengthEncoding(vector<string>& words)
-    {
+    int minimumLengthEncoding(vector<string> &words) {
         cmp_820 cmp;
         int n = words.size(), sum = 0, len_i = 0, len_j = 0;
         sort(words.begin(), words.end(), cmp);
@@ -2464,9 +2464,9 @@ public:
             ignore = false;
             len_i = words[i].length();
             for (int j = i + 1; j < n; ++j) {
-                 len_j = words[j].length();
+                len_j = words[j].length();
                 for (int k = 1; k <= len_i; ++k) {
-                    if (words[i][len_i - k] != words[j][len_j-k]) {
+                    if (words[i][len_i - k] != words[j][len_j - k]) {
                         break;
                     } else if (k == len_i) {
                         ignore = true;
@@ -2483,13 +2483,12 @@ public:
     }
 
     // problem 925
-    bool isLongPressedName(string name, string typed)
-    {
+    bool isLongPressedName(string name, string typed) {
         int n_l = name.length(), t_l = typed.length(), i = 0, j = 0;
         while (i < n_l && j < t_l) {
-            if (name [i] != typed[j])
+            if (name[i] != typed[j])
                 return false;
-            if (i + 1 < n_l && name[i+1] != name[i])
+            if (i + 1 < n_l && name[i + 1] != name[i])
                 while (typed[j] == name[i])
                     j++;
             else
@@ -2505,8 +2504,7 @@ public:
     }
 
     // problem 39
-    bool _is_same(vector<int> &a, vector<int> &b)
-    {
+    bool _is_same(vector<int> &a, vector<int> &b) {
         if (a.size() == b.size()) {
             sort(a.begin(), a.end());
             sort(b.begin(), b.end());
@@ -2520,8 +2518,7 @@ public:
     }
 
     // problem 39
-    vector<vector<int>> _combinationSum(map<int, vector<vector<int>>> &record, vector<int>& candidates, int target)
-    {
+    vector<vector<int>> _combinationSum(map<int, vector<vector<int>>> &record, vector<int> &candidates, int target) {
         if (record.find(target) != record.end())
             return record[target];
 
@@ -2542,7 +2539,7 @@ public:
                 result.push_back({can});
             }
         }
-        for (auto item1 = result.begin(); item1 != result.end(); ) {
+        for (auto item1 = result.begin(); item1 != result.end();) {
             bool flag = true;
             for (auto item2 = item1 + 1; item2 != result.end(); ++item2) {
                 if (_is_same(*item1, *item2)) {
@@ -2559,31 +2556,31 @@ public:
             record[target] = result;
         return result;
     }
+
     // problem 39
-    vector<vector<int>> combinationSum(vector<int>& candidates, int target)
-    {
+    vector<vector<int>> combinationSum(vector<int> &candidates, int target) {
         sort(candidates.begin(), candidates.end());
         map<int, vector<vector<int>>> record;
         return _combinationSum(record, candidates, target);
     }
 
     // problem 452
-    typedef struct{
-        bool operator()(pair<int, int> &a, pair<int,int> &b){
-           return a.second < b.second;
+    typedef struct {
+        bool operator()(pair<int, int> &a, pair<int, int> &b) {
+            return a.second < b.second;
         }
-    }cmp452;
+    } cmp452;
+
     // problem 452
-    bool _is_cross(pair<int,int> &a,pair<int,int> &b)
-    {
+    bool _is_cross(pair<int, int> &a, pair<int, int> &b) {
         return !(a.first > b.second || b.first > a.second);
     }
+
     // problem 452
-    int findMinArrowShots(vector<pair<int, int>>& points)
-    {
+    int findMinArrowShots(vector<pair<int, int>> &points) {
         cmp452 cmp;
         sort(points.begin(), points.end(), cmp);
-        vector<vector<pair<int,int>>> records;
+        vector<vector<pair<int, int>>> records;
         for (auto &p : points) {
             bool lonely = true;
             for (auto &r : records) {
@@ -2607,8 +2604,7 @@ public:
     }
 
     // problem 399
-    string _get_valid(map<string, double> &b_l, map<string, bool> &flags)
-    {
+    string _get_valid(map<string, double> &b_l, map<string, bool> &flags) {
         for (auto &b : b_l) {
             if (!flags[b.first]) {
                 flags[b.first] = true;
@@ -2619,13 +2615,13 @@ public:
     }
 
     // problem 399
-    vector<double> calcEquation(vector<pair<string, string>> equations, vector<double>& values, vector<pair<string, string>> queries)
-    {
+    vector<double>
+    calcEquation(vector<pair<string, string>> equations, vector<double> &values, vector<pair<string, string>> queries) {
         map<string, map<string, double>> matrix;
         set<string> vars;
         for (int i = 0; i < equations.size(); ++i) {
             matrix[equations[i].first][equations[i].second] = values[i];
-            matrix[equations[i].second][equations[i].first] = 1.0/values[i];
+            matrix[equations[i].second][equations[i].first] = 1.0 / values[i];
             vars.insert(equations[i].first);
             vars.insert(equations[i].second);
         }
@@ -2679,15 +2675,13 @@ public:
     }
 
     // problem 836
-    bool isRectangleOverlap(vector<int>& rec1, vector<int>& rec2)
-    {
+    bool isRectangleOverlap(vector<int> &rec1, vector<int> &rec2) {
         return rec1[0] < rec2[2] && rec2[0] < rec1[2] && rec1[1] < rec2[3] && rec2[1] < rec1[3];
     }
 
     // problem 494
-    int subsetSum(vector<int> &nums, int s)
-    {
-        vector<int> dp(s+1, 0);
+    int subsetSum(vector<int> &nums, int s) {
+        vector<int> dp(s + 1, 0);
         dp[0] = 1;
         for (int n : nums)
             for (int i = s; i >= n; i--)
@@ -2696,19 +2690,18 @@ public:
     }
 
     // problem 494
-    int findTargetSumWays(vector<int>& nums, int S)
-    {
+    int findTargetSumWays(vector<int> &nums, int S) {
         int sum = accumulate(nums.begin(), nums.end(), 0);
         return sum < S || (S + sum) & 1 ? 0 : subsetSum(nums, (S + sum) >> 1);
     }
 
     // problem 416
-    bool canPartition(vector<int>& nums) {
+    bool canPartition(vector<int> &nums) {
         int sum = accumulate(nums.begin(), nums.end(), 0);
         if ((sum & 1) == 1)
             return false;
         sum = sum >> 1;
-        vector<int> dp(sum+1, 0);
+        vector<int> dp(sum + 1, 0);
         dp[0] = 1;
         for (int &n : nums) {
             for (int i = sum; i >= n; --i) {
@@ -2721,15 +2714,14 @@ public:
     }
 
     // problem 628
-    typedef struct{
+    typedef struct {
         bool operator()(int a, int b) {
             return abs(a) > abs(b);
         }
-    }cmp628;
+    } cmp628;
 
     // problem 628
-    int maximumProduct(vector<int>& nums)
-    {
+    int maximumProduct(vector<int> &nums) {
         if (nums.size() == 3)
             return nums[0] * nums[1] * nums[2];
         vector<int> po, ne;
@@ -2743,19 +2735,18 @@ public:
         sort(ne.begin(), ne.end());
         int result = INT32_MIN, po_n = po.size(), ne_n = ne.size();
         if (po_n >= 3)
-           result = max(result, po[po_n-1]*po[po_n-2]*po[po_n-3]);
-        if (ne_n >=2 && po_n >= 1)
-            result = max(result, po[po_n-1]*ne[0]*ne[1]);
+            result = max(result, po[po_n - 1] * po[po_n - 2] * po[po_n - 3]);
+        if (ne_n >= 2 && po_n >= 1)
+            result = max(result, po[po_n - 1] * ne[0] * ne[1]);
         if (po_n == 0)
-            result = max(result, ne[ne_n-1]*ne[ne_n-2]*ne[ne_n-3]);
+            result = max(result, ne[ne_n - 1] * ne[ne_n - 2] * ne[ne_n - 3]);
         if (po_n == 2)
-            result = max(result, po[0]*po[1]*ne[ne_n-1]);
+            result = max(result, po[0] * po[1] * ne[ne_n - 1]);
         return result;
     }
 
     // problem 215
-    int findKthLargest(vector<int>& nums, int k)
-    {
+    int findKthLargest(vector<int> &nums, int k) {
         int low = 0, high = nums.size() - 1, guard = 0;
         k = k - 1;
         while (low <= high) {
@@ -2774,15 +2765,14 @@ public:
             if (i == k)
                 return nums[i];
             else if (i > k)
-                high = i-1;
+                high = i - 1;
             else if (i < k)
-                low = i+1;
+                low = i + 1;
         }
     }
 
     // problem 1
-    vector<int> twoSum(vector<int>& nums, int target)
-    {
+    vector<int> twoSum(vector<int> &nums, int target) {
         unordered_map<int, int> record;
         for (int i = 0; i < nums.size(); ++i) {
             if (record.find(nums[i]) != record.end()) {
@@ -2793,8 +2783,7 @@ public:
     }
 
     // problem 114
-    TreeNode* _flatten(TreeNode* head)
-    {
+    TreeNode *_flatten(TreeNode *head) {
         if (!(head->left || head->right)) {
             return head;
         }
@@ -2811,22 +2800,22 @@ public:
             return _flatten(head->right);
         }
     }
+
     // problem 114
-    void flatten(TreeNode* root)
-    {
+    void flatten(TreeNode *root) {
         if (root)
             _flatten(root);
     }
 
     // problem 279
     int numSquares(int n) {
-        vector<int> dp(n+1, INT32_MAX);
+        vector<int> dp(n + 1, INT32_MAX);
         for (int i = 1; i * i <= n; i++) {
             dp[i * i] = 1;
         }
         for (int i = 2; i <= n; i++) {
-            for (int j = 1; j*j < i; j++) {
-                dp[i] = min(dp[i], 1 + dp[i - j*j]);
+            for (int j = 1; j * j < i; j++) {
+                dp[i] = min(dp[i], 1 + dp[i - j * j]);
             }
         }
         return dp[n];
@@ -2846,13 +2835,13 @@ public:
         dictionary['8'] = "tuv";
         dictionary['9'] = "wxyz";
         vector<string> *cur, *pre;
-        pre = new vector<string>(1,"");
+        pre = new vector<string>(1, "");
         for (char &c : digits) {
             cur = new vector<string>();
             for (string &p : *pre) {
                 if (dictionary.find(c) != dictionary.end())
                     for (char &c1: dictionary[c]) {
-                        cur->push_back(p+c1);
+                        cur->push_back(p + c1);
                     }
                 else
                     cur->push_back(p);
@@ -2865,8 +2854,7 @@ public:
     }
 
     // problem 240
-    bool searchMatrix(vector<vector<int>>& matrix, int target)
-    {
+    bool searchMatrix(vector<vector<int>> &matrix, int target) {
         if (matrix.size() == 0 || matrix[0].size() == 0)
             return false;
         int row = 0;
@@ -2880,6 +2868,31 @@ public:
                 row++;
         }
         return false;
+    }
+
+    // problem 105
+    TreeNode *_buildTree(vector<int> &preorder, int pi, vector<int> &inorder, int low, int high) {
+        if (pi > preorder.size() - 1 || low > high)
+            return nullptr;
+        TreeNode *root = new TreeNode(preorder[pi]);
+        int root_index = -1;
+        for (int i = low; i <= high; ++i) {
+            if (inorder[i] == root->val) {
+                root_index = i;
+                break;
+            }
+        }
+        int l_pi = pi + 1, r_pi = pi + 1 + root_index - low;
+        root->left = _buildTree(preorder, l_pi, inorder, low, root_index - 1);
+        root->right = _buildTree(preorder, r_pi, inorder, root_index + 1, high);
+        return root;
+    }
+
+    // problem 105
+    TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
+        if (preorder.size() == 0)
+            return nullptr;
+        return _buildTree(preorder, 0, inorder, 0, inorder.size()-1);
     }
 };
 
