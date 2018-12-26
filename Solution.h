@@ -2892,8 +2892,34 @@ public:
     TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
         if (preorder.size() == 0)
             return nullptr;
-        return _buildTree(preorder, 0, inorder, 0, inorder.size()-1);
+        return _buildTree(preorder, 0, inorder, 0, inorder.size() - 1);
+    }
+
+    // problem 207
+    bool canFinish(int numCourses, vector<pair<int, int>> &prerequisites) {
+        vector<vector<int>> dependency(numCourses, vector<int>());
+        for (auto &p : prerequisites) {
+            dependency[p.first].push_back(p.second);
+        }
+
+        vector<int> indegrees(numCourses, 0);
+        for (auto &nei : dependency) {
+            for (int &i : nei) {
+                indegrees[i]++;
+            }
+        }
+        for (int i = 0; i < numCourses; ++i) {
+            int j = 0;
+            while (j < numCourses) {
+                if (indegrees[j] == 0) break;
+                j++;
+            }
+            if (j == numCourses) return false;
+            indegrees[j] = -1;
+            for (int &n: dependency[j]) {
+                indegrees[n]--;
+            }
+        }
+        return true;
     }
 };
-
-#endif //LEETCODE_SOLUTION_H
