@@ -2896,7 +2896,8 @@ public:
     }
 
     // problem 207
-    bool canFinish(int numCourses, vector<pair<int, int>> &prerequisites) {
+    bool canFinish(int numCourses, vector<pair<int, int>> &prerequisites)
+    {
         vector<vector<int>> dependency(numCourses, vector<int>());
         for (auto &p : prerequisites) {
             dependency[p.first].push_back(p.second);
@@ -2922,4 +2923,26 @@ public:
         }
         return true;
     }
+
+    // problem 438
+    vector<int> findAnagrams(string s, string p)
+    {
+        vector<int> result, pv(26, 0), sv(26, 0);
+        for (int i = 0; i < p.size(); ++i) {
+            pv[p[i]-'a']++;
+            sv[s[i]-'a']++;
+        }
+        if (pv == sv) {
+            result.push_back(0);
+        }
+        for (int i = p.size(); i < s.size(); ++i) {
+            ++sv[s[i]-'a'];
+            --sv[s[i-p.size()]-'a'];
+            if (pv == sv)
+                result.push_back(i - p.size()+1);
+        }
+        return result;
+    }
 };
+
+#endif

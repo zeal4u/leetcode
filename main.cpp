@@ -5,7 +5,10 @@
 int main() {
     Solution solution;
 
-    vector<pair<int, int>> pre = {{0, 1}, {0, 2}, {1, 2}};
-    cout<<solution.canFinish(2, pre);
+    string s = "abababa";
+    string p = "ab";
+
+    solution.findAnagrams(s, p);
+
     return 0;
 }
