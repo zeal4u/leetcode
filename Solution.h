@@ -2943,6 +2943,67 @@ public:
         }
         return result;
     }
+
+    // problem 543
+    int _diameterOfBinaryTree(TreeNode* root, int& max_diameter)
+    {
+        if (root == nullptr)
+            return 0;
+        int left = _diameterOfBinaryTree(root->left, max_diameter);
+        int right = _diameterOfBinaryTree(root->right, max_diameter);
+        max_diameter = max(max_diameter, left + right);
+        return max(left, right) + 1;
+    }
+    // problem 543
+    int diameterOfBinaryTree(TreeNode* root)
+    {
+        int diameter = 0;
+        _diameterOfBinaryTree(root, diameter);
+        return diameter;
+    }
+
+    // problem 437
+    void _walkTree(TreeNode* root, const int& sum, int& count)
+    {
+        if (root != nullptr) {
+            _pathSum(root, sum, count);
+            _walkTree(root->left, sum, count);
+            _walkTree(root->right, sum, count);
+        }
+    }
+    // problem 437
+    void _pathSum(TreeNode* root, int sum, int& count)
+    {
+        if (root == nullptr)
+            return;
+        if ((sum -= root->val) == 0)
+            count++;
+        _pathSum(root->left, sum, count);
+        _pathSum(root->right, sum, count);
+    }
+    // problem 437
+    int pathSum(TreeNode* root, int sum)
+    {
+        int result = 0;
+        _walkTree(root, sum, result);
+        return result;
+    }
+
+    // problem 337
+    int _rob(TreeNode* root, bool robedParent)
+    {
+        if (root == nullptr)
+            return 0;
+        int result = _rob(root->left, false) + _rob(root->right, false);
+        if (robedParent)
+            return result;
+        else
+            return max(_rob(root->left, true) + _rob(root->right, true) + root->val, result);
+    }
+    // problem 337
+    int rob(TreeNode* root) {
+        return _rob(root, false);
+    }
 };
 
 #endif

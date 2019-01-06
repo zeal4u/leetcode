@@ -5,10 +5,9 @@
 int main() {
     Solution solution;
 
-    string s = "abababa";
-    string p = "ab";
+    TreeNode* root  = TreeNode::BuildTree({10,5,-3,3,2,null,11,3,-2,null,1});
 
-    solution.findAnagrams(s, p);
+    cout<<solution.rob(root);
 
     return 0;
 }
