@@ -5,50 +5,30 @@
 #ifndef LEETCODE_TREENODE_H
 #define LEETCODE_TREENODE_H
 
+#include <vector>
+#include <deque>
+#include <stack>
+#include <stdint-gcc.h>
+
 #define null INT32_MIN
 
+
 class TreeNode {
-public:
-    int val;
-    TreeNode *left;
-    TreeNode *right;
+ public:
+  int val;
+  TreeNode *left;
+  TreeNode *right;
 
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 
-    static int test_val;
+  static TreeNode *BuildTree(std::vector<int> nums);
 
-    static TreeNode *BuildTree(vector<int> nums) {
-        TreeNode *root = new TreeNode(nums[0]);
-        deque<TreeNode *> parents;
-        parents.push_back(root);
-        deque<TreeNode *> children;
-        TreeNode *parent;
-        bool left = true;
-        for (int i = 1; i < nums.size(); i++) {
-            if (left) {
-                parent = parents.front();
-                parents.pop_front();
-            }
-            if (nums[i] != null) {
-                TreeNode *new_node = new TreeNode(nums[i]);
-                if (left)
-                    parent->left = new_node;
-                else
-                    parent->right = new_node;
-                children.push_back(new_node);
-            }
-            left = !left;
-            if (left && parents.empty()) {
-                parents = children;
-                children.clear();
-            }
-        }
-        parent = nullptr;
-        delete parent;
-        return root;
-    }
-
+  static void test_tree();
 };
 
+
+extern void pre_order(TreeNode *root, std::vector<TreeNode *> &result);
+
+extern void in_order(TreeNode *root, std::vector<TreeNode *> &result);
 
 #endif //LEETCODE_TREENODE_H
