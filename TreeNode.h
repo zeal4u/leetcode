@@ -43,8 +43,6 @@ public:
                 children.clear();
             }
         }
-        parent = nullptr;
-        delete parent;
         return root;
     }
 
