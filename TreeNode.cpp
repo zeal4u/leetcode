@@ -57,7 +57,7 @@ void in_order(TreeNode *root, std::vector<TreeNode *> &result) {
   }
 }
 
-TreeNode *TreeNode::BuildTree(std::vector<int> nums) {
+TreeNode *TreeNode::BuildTree(const std::vector<int>& nums) {
   if (0 == nums.size() || null == nums[0])
     return nullptr;
   TreeNode *root = new TreeNode(nums[0]);

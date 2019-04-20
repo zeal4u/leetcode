@@ -21,7 +21,7 @@ class TreeNode {
 
   TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 
-  static TreeNode *BuildTree(std::vector<int> nums);
+  static TreeNode *BuildTree(const std::vector<int>& nums);
 
   static void test_tree();
 };
