@@ -79,20 +79,22 @@ const static int INORDER = 2;
     }
 
     // Find the largest binary tree in a normal binary tree
-    struct ReturnType {
+    // assist struct
+    struct ReturnType1 {
         TreeNode *root_;
         int max_bst_size_;
         int min_val_;
         int max_val_;
-        ReturnType(TreeNode *root, int max_bst_szie, int min_val, int max_val) :
+        ReturnType1(TreeNode *root, int max_bst_szie, int min_val, int max_val) :
             root_(root), max_bst_size_(max_bst_szie), min_val_(min_val), max_val_(max_val) {}
     };
-
-    ReturnType process(TreeNode *root) {
+    // Find the largest binary tree in a normal binary tree
+    // assist method
+    ReturnType1 process(TreeNode *root) {
         if (root == nullptr)
-            return ReturnType(nullptr, 0, INT32_MAX, INT32_MIN);
-        ReturnType left_rt = process(root->left);
-        ReturnType right_rt = process(root->right);
+            return ReturnType1(nullptr, 0, INT32_MAX, INT32_MIN);
+        ReturnType1 left_rt = process(root->left);
+        ReturnType1 right_rt = process(root->right);
         int min_val = std::min({left_rt.min_val_, right_rt.min_val_, root->val});
         int max_val = std::max({left_rt.max_val_, right_rt.max_val_, root->val});
         int max_bst_size = std::max(left_rt.max_bst_size_, right_rt.max_bst_size_);
@@ -104,12 +106,71 @@ const static int INORDER = 2;
             max_bst_size = left_rt.max_bst_size_ + right_rt.max_bst_size_ + 1;
             head = root;
         }
-        return ReturnType(head, max_bst_size, min_val, max_val);
+        return ReturnType1(head, max_bst_size, min_val, max_val);
     }
     // Find the largest binary tree in a normal binary tree
     // main method
     TreeNode* GetMaxBST(TreeNode *root) {
         return process(root).root_;
+    }
+
+    // 找到二叉树中符合搜索二叉树条件的最大拓扑结构
+    // 一棵树的局部结构是二叉搜索树，不一定要求是一棵完整子树
+    // 辅助数据结构
+    struct ReturnType2 {
+        int left_support_;
+        int right_support_;
+        ReturnType2() {}
+        ReturnType2(int left_support, int right_support)
+            : left_support_(left_support),
+              right_support_(right_support) {}
+    };
+    // 找到二叉树中符合搜索二叉树条件的最大拓扑结构
+    // assist method 1
+    int ModifyRecord(TreeNode *node, int value,
+            std::unordered_map<TreeNode*, ReturnType2> &record, bool is_left) {
+       if (node == nullptr || record.find(node) == record.end())
+           return 0;
+       ReturnType2 rt = record[node];
+       if ((is_left && node->val > value) || (!is_left && node->val < value)) {
+           record.erase(node);
+           return rt.left_support_ + rt.right_support_ + 1;
+       } else {
+           int minus = ModifyRecord(is_left ? node->right : node->left, value, record, is_left);
+           if (is_left) {
+               rt.right_support_ -= minus;
+           } else {
+               rt.left_support_ -= minus;
+           }
+           record[node] = rt;
+           return minus;
+       }
+    }
+
+    // 找到二叉树中符合搜索二叉树条件的最大拓扑结构
+    // assist method 2
+    int PosOrder(TreeNode *root, std::unordered_map<TreeNode*, ReturnType2> &record) {
+        if (root == nullptr)
+            return 0;
+        int left_res = PosOrder(root->left, record);
+        int right_res = PosOrder(root->right, record);
+        ModifyRecord(root->left, root->val, record, true);
+        ModifyRecord(root->right, root->val, record, false);
+        int left_bst = 0, right_bst = 0;
+        if (record.find(root->left) != record.end())
+            left_bst = record[root->left].left_support_ + record[root->left].right_support_ + 1;
+
+        if (record.find(root->right) != record.end())
+            right_bst = record[root->right].left_support_ + record[root->right].right_support_ + 1;
+
+        record[root] = ReturnType2(left_bst, right_bst);
+        return std::max({left_bst + right_bst + 1, left_res, right_res});
+    }
+    // 找到二叉树中符合搜索二叉树条件的最大拓扑结构
+    // main method
+    int BSTTopoSize(TreeNode *root) {
+        std::unordered_map<TreeNode*, ReturnType2> record;
+        return PosOrder(root, record);
     }
 
 } // namespace binary_tree_problem
