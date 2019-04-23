@@ -8,7 +8,8 @@
 #include <vector>
 #include <deque>
 #include <stack>
-#include <stdint-gcc.h>
+#include <stdint.h>
+#include <string>
 
 #define null INT32_MIN
 
@@ -20,6 +21,8 @@ class TreeNode {
   TreeNode *right;
 
   TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+
+  static std::string ToString(TreeNode *root);
 
   static TreeNode *BuildTree(const std::vector<int>& nums);
 

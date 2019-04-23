@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 
 void TreeNode::test_tree() {
   //TreeNode* root  = TreeNode::BuildTree({10,5,-3,3,2,null,11,3,-2,null,1,12});
@@ -86,4 +87,20 @@ TreeNode *TreeNode::BuildTree(const std::vector<int>& nums) {
     }
   }
   return root;
+}
+
+void Serialize(TreeNode *root, std::ostringstream &out) {
+  if (root == nullptr) {
+    out << "#";
+  } else {
+    out << root->val << "@";
+    Serialize(root->left, out);
+    Serialize(root->right, out);
+  }
+}
+
+std::string TreeNode::ToString(TreeNode *root) {
+  std::ostringstream out;
+  Serialize(root, out);
+  return out.str();
 }
